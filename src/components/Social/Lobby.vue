@@ -1,8 +1,8 @@
 <template>
   <div class="is-size-8">
-    <p v-if="gameName === null" >Lobby goes here!</p>
-    <p v-else>Lobby for {{gameName}}!</p>
-    <p v-if="userName !== null">Welcome {{userName}}!</p>
+    <p v-if="gameName === null">Lobby goes here!</p>
+    <p v-else>Lobby for {{ gameName }}!</p>
+    <p v-if="userName !== null">Welcome {{ userName }}!</p>
   </div>
 </template>
 

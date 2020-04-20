@@ -2,19 +2,16 @@
   <div id="app">
     <Header />
     <router-view />
-    <SocialPanel />
   </div>
 </template>
 
 <script>
 import Header from './components/Header.vue';
-import SocialPanel from './components/Social/SocialPanel.vue';
 
 export default {
   name: 'App',
   components: {
     Header,
-    SocialPanel,
   },
 };
 </script>
