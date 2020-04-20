@@ -10,8 +10,11 @@
   "dependencies": {
     "buefy": "^0.8.15",
     "core-js": "^3.6.4",
+    "peerjs": "^1.2.0",
     "vue": "^2.6.11",
-    "vue-router": "^3.1.6"
+    "vue-peerjs": "^0.3.0",
+    "vue-router": "^3.1.6",
+    "vuex": "^3.2.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.3.0",
