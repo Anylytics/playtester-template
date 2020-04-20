@@ -1,6 +1,6 @@
 <template>
   <div class="stuck-on bottom-right social-box card">
-    <b-tabs>
+    <b-tabs v-model="activeTab">
       <b-tab-item label="Chat">
         <Chat />
       </b-tab-item>
@@ -19,6 +19,11 @@ import Lobby from './Lobby.vue';
 export default {
   name: 'SocialPanel',
   components: { Chat, Lobby },
+  data() {
+    return {
+      activeTab: 1,
+    };
+  },
 };
 </script>
 

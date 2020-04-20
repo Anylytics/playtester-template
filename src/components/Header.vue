@@ -11,19 +11,45 @@
       </b-navbar-item>
     </template>
     <template slot="end">
-      <b-navbar-item>
-        New
-      </b-navbar-item>
-      <b-navbar-item>
-        Join
-      </b-navbar-item>
+      <b-navbar-item v-on:click="createModal()">New</b-navbar-item>
+      <b-navbar-item tag="router-link" to="/join">Join</b-navbar-item>
     </template>
+    <b-modal
+      :active.sync="isComponentModalActive"
+      has-modal-card
+      trap-focus
+      aria-role="dialog"
+      aria-modal
+    >
+      <CreateForm></CreateForm>
+    </b-modal>
   </b-navbar>
 </template>
 
 <script>
+/* eslint-disable vue/no-unused-components */
+import CreateForm from './Social/CreateForm.vue';
+
 export default {
   name: 'Header',
+  components: {
+    CreateForm,
+  },
+  data() {
+    return {
+      isComponentModalActive: false,
+    };
+  },
+  methods: {
+    createModal() {
+      this.$buefy.modal.open({
+        parent: this,
+        component: CreateForm,
+        hasModalCard: true,
+        trapFocus: true,
+      });
+    },
+  },
 };
 </script>
 
