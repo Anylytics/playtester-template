@@ -1,22 +1,27 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Header />
+    <router-view />
+    <SocialPanel />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
+import Header from './components/Header.vue';
+import SocialPanel from './components/Social/SocialPanel.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld,
+    Header,
+    SocialPanel,
   },
 };
 </script>
 
 <style>
+@import 'https://cdn.materialdesignicons.com/2.5.94/css/materialdesignicons.min.css';
+@import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css');
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
