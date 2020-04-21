@@ -50,15 +50,15 @@ export default {
     },
     openJoinModal() {
       this.$buefy.dialog.prompt({
-        message: 'Please enter the room ID',
+        message: 'Please enter the game ID',
         inputAttrs: {
-          placeholder: 'e.g. fTrFy8',
-          maxlength: 6,
+          placeholder: 'e.g. q6h1ftzqldf00000',
+          maxlength: 16,
         },
         trapFocus: true,
         onConfirm: (gameId) => {
           this.$store.commit('joinGame', gameId);
-          this.$router.push({ path: 'game', query: { id: gameId } });
+          this.$router.push({ path: 'game', query: { gameId } });
         },
       });
     },
