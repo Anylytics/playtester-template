@@ -1,21 +1,21 @@
 <template>
   <b-navbar fixed-top class="shadow" style="background:#ecf0f1">
     <template slot="brand">
-      <b-navbar-item>
+      <b-navbar-item tag="router-link" to="/home">
         <img src="@/assets/logo.svg" />
       </b-navbar-item>
     </template>
     <template slot="start">
-      <b-navbar-item>
+      <b-navbar-item tag="router-link" to="/home">
         <b>Feature Factory </b>
       </b-navbar-item>
-      <b-navbar-item v-if="gameId">
-        <b-button icon-left="content-copy">{{ gameId }}</b-button>
+      <b-navbar-item>
+        {{ currentRouteName }}
       </b-navbar-item>
     </template>
     <template slot="end">
       <b-navbar-item v-on:click="createModal()">New</b-navbar-item>
-      <b-navbar-item tag="router-link" to="/join">Join</b-navbar-item>
+      <b-navbar-item v-on:click="openJoinModal">Join</b-navbar-item>
     </template>
   </b-navbar>
 </template>
@@ -35,6 +35,9 @@ export default {
     ...mapState({
       gameId: (s) => s.userInfo.gameId,
     }),
+    currentRouteName() {
+      return this.$route.name;
+    },
   },
   methods: {
     createModal() {
@@ -43,6 +46,20 @@ export default {
         component: CreateForm,
         hasModalCard: true,
         trapFocus: true,
+      });
+    },
+    openJoinModal() {
+      this.$buefy.dialog.prompt({
+        message: 'Please enter the room ID',
+        inputAttrs: {
+          placeholder: 'e.g. fTrFy8',
+          maxlength: 6,
+        },
+        trapFocus: true,
+        onConfirm: (gameId) => {
+          this.$store.commit('joinGame', gameId);
+          this.$router.push({ path: 'game', query: { id: gameId } });
+        },
       });
     },
   },
