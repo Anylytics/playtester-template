@@ -27,4 +27,7 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+.is-full-height {
+  height: 100%;
+}
 </style>
