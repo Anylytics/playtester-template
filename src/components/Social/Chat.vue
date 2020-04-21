@@ -7,11 +7,11 @@
         :key="index"
         v-bind:class="{ pushRight: chat.isMe }"
       >
-        <div>
-          <b-tag rounded>{{ chat.msg }}</b-tag>
+        <div class="chat-msg-wrapper">
+          <span class="chat-msg">{{ chat.msg }}</span>
         </div>
         <div class="chat-user is-info is-size-7 has-text-grey-light">
-          {{ chat.user }}
+          {{ chat.user || 'no username 😒' }}
         </div>
       </div>
     </div>
@@ -97,10 +97,17 @@ export default {
   padding-top: 5px;
   padding-bottom: 5px;
 }
+.chat-bubble .chat-msg-wrapper {
+  background: whitesmoke;
+  padding: 4px 8px;
+  margin: 2px 0;
+  border-radius: 6px;
+  display: inline-block;
+}
 .chat-bubble.pushRight {
   text-align: right;
 }
 .chat-bubble .chat-user {
-  padding: 0 8px;
+  padding: 0 4px;
 }
 </style>
