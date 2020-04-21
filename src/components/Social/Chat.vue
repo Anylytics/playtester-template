@@ -1,6 +1,6 @@
 <template>
   <div class="chat-body">
-    <div class="chat-container">
+    <div class="chat-container" id="chatContent">
       <div
         class="chat-bubble"
         v-for="(chat, index) in chats"
@@ -39,6 +39,10 @@ export default {
         msg: this.currentMsg,
       });
       this.currentMsg = '';
+      this.$nextTick(() => {
+        const container = this.$el.querySelector('#chatContent');
+        container.scrollTop = container.scrollHeight;
+      });
     },
   },
   computed: {
@@ -73,7 +77,7 @@ export default {
   position: relative;
 }
 .chat-container {
-  height: calc(100% - 50px);
+  height: calc(100% - 57px);
   overflow: auto;
 }
 .chat-input {
@@ -81,6 +85,7 @@ export default {
   bottom: 0;
   width: 100%;
   padding: 10px;
+  background: whitesmoke;
 }
 .chat-bubble {
   text-align: left;
