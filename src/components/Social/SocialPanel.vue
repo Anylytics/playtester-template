@@ -58,10 +58,6 @@ export default {
   width: 256px;
   height: 512px;
   transition: 0.4s ease-in-out;
-<<<<<<< HEAD
-  /* transform: translateY(464px); */
-=======
->>>>>>> 3020f170b9e93120f0ceb6576a84e407dc1a74d7
 }
 .social-box.inactive {
   transform: translateY(464px);
