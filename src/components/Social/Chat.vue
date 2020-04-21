@@ -27,17 +27,24 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'Chat',
   methods: {
     addMsg() {
       this.chats.push({
-        user: 'nabil',
+        user: this.userName,
         isMe: true,
         msg: this.currentMsg,
       });
       this.currentMsg = '';
     },
+  },
+  computed: {
+    ...mapState({
+      userName: (s) => s.userInfo.userName,
+    }),
   },
   data() {
     return {

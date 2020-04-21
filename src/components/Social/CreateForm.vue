@@ -14,12 +14,21 @@
         </b-field>
 
         <b-field label="Game ID">
-          <b-progress v-if="gameId === null" show-value>Waiting for Server</b-progress>
-          <b-input v-else v-model="gameId" placeholder="Waiting for Game ID" disabled></b-input>
+          <b-progress v-if="gameId === null" show-value
+            >Waiting for Server</b-progress
+          >
+          <b-input
+            v-else
+            v-model="gameId"
+            placeholder="Waiting for Game ID"
+            disabled
+          ></b-input>
         </b-field>
       </section>
       <footer class="modal-card-foot">
-        <button class="button" type="button" v-on:click="closeModal()">Cancel</button>
+        <button class="button" type="button" v-on:click="closeModal()">
+          Cancel
+        </button>
         <button
           class="button is-primary"
           type="button"
@@ -40,7 +49,6 @@ import Peer from 'peerjs';
 export default {
   name: 'CreateForm',
   created() {
-    console.log('Here');
     this.$peer = new Peer();
     this.$peer.on('open', (id) => {
       console.log(`Peer Id ${id}`);
