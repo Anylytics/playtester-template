@@ -1,16 +1,18 @@
 <template>
-  <div class="is-size-8">
-    <p v-if="gameName === null">Lobby goes here!</p>
-    <p v-else>Lobby for {{ gameName }}!</p>
-    <p v-if="userName !== null">Welcome {{ userName }}!</p>
+  <div class="pad-10">
+    <p v-if="!!gameName">Lobby for {{ gameName }}!</p>
+    <p v-if="!!userName">Welcome {{ userName }}!</p>
+    <GameId />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
+import GameId from '@/components/Social/GameID.vue';
 
 export default {
   name: 'Lobby',
+  components: { GameId },
   computed: {
     ...mapState({
       gameName: (s) => s.userInfo.gameName,
@@ -21,4 +23,8 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
+<style scoped>
+.pad-10 {
+  padding: 10px;
+}
+</style>
