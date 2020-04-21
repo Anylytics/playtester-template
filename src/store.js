@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { getField, updateField } from 'vuex-map-fields';
+// import { getField, updateField } from 'vuex-map-fields';
 // import { randomInteger } from './utils';
 
 Vue.use(Vuex);
@@ -15,9 +15,6 @@ export default new Vuex.Store({
       userName: null,
     },
   },
-  getters: {
-    getField,
-  },
   mutations: {
     createGame(state, { gameName, userName, gameId }) {
       state.userInfo.gameName = gameName;
@@ -25,6 +22,9 @@ export default new Vuex.Store({
       state.userInfo.gameId = gameId;
       // TODO: Add any other init logic here
     },
-    updateField,
+    joinGame(state, gameId) {
+      console.log(gameId);
+      state.userInfo.gameId = gameId;
+    },
   },
 });

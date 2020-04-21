@@ -28,6 +28,10 @@ const router = new Router({
       component: Home,
     },
     {
+      path: '/',
+      component: Home,
+    },
+    {
       path: '/game',
       name: 'Game Room',
       component: Game,
