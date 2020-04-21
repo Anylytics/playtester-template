@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { randomInteger } from './utils';
+import { getField, updateField } from 'vuex-map-fields';
+// import { randomInteger } from './utils';
 
 Vue.use(Vuex);
 
@@ -10,15 +11,20 @@ export default new Vuex.Store({
       gameName: null,
       // TODO: Get rid of stub here in favor of game lobby ID generation;
       //       when null, component will not render
-      gameId: randomInteger(10000, 99999),
+      gameId: null,
       userName: null,
     },
   },
+  getters: {
+    getField,
+  },
   mutations: {
-    createGame(state, { gameName, userName }) {
+    createGame(state, { gameName, userName, gameId }) {
       state.userInfo.gameName = gameName;
       state.userInfo.userName = userName;
+      state.userInfo.gameId = gameId;
       // TODO: Add any other init logic here
     },
+    updateField,
   },
 });

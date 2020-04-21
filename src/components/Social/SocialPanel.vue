@@ -33,7 +33,7 @@ export default {
   width: 256px;
   height: 512px;
   transition: 0.4s ease-in-out;
-  transform: translateY(464px);
+  /* transform: translateY(464px); */
 }
 .social-box:hover {
   transform: translateY(0);
