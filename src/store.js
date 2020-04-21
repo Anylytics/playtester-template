@@ -20,5 +20,9 @@ export default new Vuex.Store({
       state.userInfo.userName = userName;
       // TODO: Add any other init logic here
     },
+    joinGame(state, gameId) {
+      console.log(gameId);
+      state.userInfo.gameId = gameId;
+    },
   },
 });
