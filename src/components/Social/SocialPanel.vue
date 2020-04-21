@@ -4,22 +4,21 @@
     class="stuck-on bottom-right social-box card"
     v-bind:class="{ inactive: !panelActive }"
   >
-    <b-button
-      size="is-small"
-      icon-left="chevron-double-down"
-      class="close-icon"
-      v-on:click="panelActive = !panelActive"
-    >
-    </b-button>
     <b-tabs v-model="activeTab" class="chat is-full-height">
       <b-tab-item label="Chat" class="is-full-height">
         <Chat />
       </b-tab-item>
-
       <b-tab-item label="Lobby">
         <Lobby />
       </b-tab-item>
     </b-tabs>
+    <b-button
+      size="is-small"
+      icon-left="chevron-double-down"
+      class="close-icon"
+      v-on:click="togglePanel"
+    >
+    </b-button>
   </div>
 </template>
 
@@ -30,6 +29,12 @@ import Lobby from './Lobby.vue';
 export default {
   name: 'SocialPanel',
   components: { Chat, Lobby },
+  methods: {
+    togglePanel() {
+      console.log('HELLO!');
+      this.panelActive = !this.panelActive;
+    },
+  },
   data() {
     return {
       activeTab: 1,
