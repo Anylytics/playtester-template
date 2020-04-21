@@ -16,25 +16,31 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    steps:
-    # Runs a single command using the runners shell
-    - name: Install dependencies & build static directory
-      run: |
-        npm install
-        npm run build
-  
-  deploy:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-    - uses: jakejarvis/s3-sync-action@v0.5.1
+    - name: Setup Node.js environment v${{ matrix.node-version }}
+      uses: actions/setup-node@v1.4.1
       with:
+        node-version: ${{ matrix.node-version }}
+    # Runs a single command using the runners shell
+    - name: NPM Install
+      run: |
+        npm install
+    - name: Production Build
+      run: |
+        npm run build
+    - name: Deploy to S3
+      uses: jakejarvis/s3-sync-action@v0.5.1
+      with: 
         args: --acl public-read --follow-symlinks --delete
       env:
         AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        SOURCE_DIR: 'dist'
-
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+        SOURCE_DIR: "build"
+  
