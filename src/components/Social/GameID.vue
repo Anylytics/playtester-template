@@ -4,7 +4,7 @@
     icon-right="content-copy"
     type="is-primary"
     v-on:click="copyToClipboard"
-    ><b>Game ID</b>: {{ gameId }}</b-button
+    >Copy Game ID</b-button
   >
 </template>
 
