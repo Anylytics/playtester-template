@@ -1,6 +1,7 @@
 <template>
   <div>
     <p>Feature Factory!</p>
+    <pre>PLAYTESTER</pre>
     <SocialPanel />
   </div>
 </template>
