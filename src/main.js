@@ -24,10 +24,12 @@ const router = new Router({
   routes: [
     {
       path: '/home',
+      name: 'Home',
       component: Home,
     },
     {
       path: '/',
+      name: 'Home',
       component: Home,
     },
     {
