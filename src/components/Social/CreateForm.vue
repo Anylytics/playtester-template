@@ -43,17 +43,16 @@
 </template>
 
 <script>
-// import { mapState } from 'vuex';
-import Peer from 'peerjs';
+import { mapState } from 'vuex';
 
 export default {
   name: 'CreateForm',
   created() {
-    this.$peer = new Peer();
-    this.$peer.on('open', (id) => {
-      console.log(`Peer Id ${id}`);
-      this.gameId = id;
-    });
+    // this.peerjs = new Peer({});
+    // this.peerjs.on('open', (id) => {
+    //   console.log(`Peer Id ${id}`);
+    //   this.gameId = id;
+    // });
   },
   data() {
     return {
@@ -62,10 +61,14 @@ export default {
       placeUserName: 'GuitySpark',
       gameName: null,
       userName: null,
-      gameId: null,
+      // gameId: null,
     };
   },
-  computed: {},
+  computed: {
+    ...mapState({
+      gameId: (s) => s.userInfo.myId,
+    }),
+  },
   methods: {
     createGame() {
       if (this.gameName === null) {
@@ -74,14 +77,15 @@ export default {
       if (this.userName === null) {
         this.userName = this.placeUserName;
       }
-      console.log(`${this.gameName} ${this.userName}`);
-      this.$store.commit('createGame', {
-        gameName: this.gameName,
-        userName: this.userName,
-        gameId: this.gameId,
-      });
-      this.$router.push({ path: 'game', query: { gameid: this.gameId } });
-      this.$parent.close();
+      this.$store
+        .dispatch('initHost', {
+          gameName: this.gameName,
+          userName: this.userName,
+        })
+        .then(() => {
+          this.$router.push({ path: 'game', query: { gameid: this.gameId } });
+          this.$parent.close();
+        });
     },
     closeModal() {
       this.$parent.close();

@@ -7,6 +7,8 @@
     <p v-if="!!gameName">Lobby for {{ gameName }}!</p>
     <p v-if="!!userName">Welcome {{ userName }}!</p>
     <GameId />
+    <p>Players:</p>
+    <p v-for="user in allUsers" :key="user">{{ user }}</p>
   </div>
 </template>
 
@@ -22,6 +24,7 @@ export default {
       gameName: (s) => s.userInfo.gameName,
       userName: (s) => s.userInfo.userName,
       gameId: (s) => s.userInfo.gameId,
+      allUsers: (s) => s.userInfo.allUsers,
     }),
   },
 };

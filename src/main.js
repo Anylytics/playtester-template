@@ -11,7 +11,8 @@ import Game from '@/pages/Game.vue';
 import store from '@/store';
 import { randomInteger } from './utils';
 
-Vue.use(VuePeerJS, new Peer({}), { store });
+// Vue.use(VuePeerJS, new Peer({}));
+store.dispatch('initNetworking');
 Vue.use(Buefy);
 Vue.use(Router);
 Vue.mixin({
