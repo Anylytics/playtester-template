@@ -11,11 +11,11 @@ function relayOverNetwork(state, payload, functionName) {
   // if (typeof payload !== 'object') {
   //   payload = { payload };
   // }
-  payload.functionName = functionName;
   if (
     payload.fromNetwork === undefined
     && state.userInfo.connections.length > 0
   ) {
+    payload.functionName = functionName;
     if (payload.connection === undefined) {
       console.log(
         `sending ${functionName} to ${state.userInfo.connections.length} connections`,
@@ -48,6 +48,9 @@ export default new Vuex.Store({
       myId: null,
       allUsers: [],
     },
+    socialInfo: {
+      chats: [],
+    },
   },
   mutations: {
     addConnection(state, connection) {
@@ -63,6 +66,11 @@ export default new Vuex.Store({
       const { user } = payload;
       console.log(`Adding user ${user}`);
       state.userInfo.allUsers.push(user);
+    },
+    addMessage(state, payload) {
+      relayOverNetwork(state, payload, 'addMessage');
+      const { message } = payload;
+      state.socialInfo.chats.push(message);
     },
   },
   actions: {

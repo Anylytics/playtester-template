@@ -5,7 +5,7 @@
         class="chat-bubble"
         v-for="(chat, index) in chats"
         :key="index"
-        v-bind:class="{ pushRight: chat.isMe }"
+        v-bind:class="{ pushRight: chat.user === userName }"
       >
         <div class="chat-msg-wrapper">
           <span class="chat-msg">{{ chat.msg }}</span>
@@ -33,10 +33,12 @@ export default {
   name: 'Chat',
   methods: {
     addMsg() {
-      this.chats.push({
-        user: this.userName,
-        isMe: true,
-        msg: this.currentMsg,
+      this.$store.commit('addMessage', {
+        message: {
+          user: this.userName,
+          // isMe: true,
+          msg: this.currentMsg,
+        },
       });
       this.currentMsg = '';
       this.$nextTick(() => {
@@ -48,23 +50,12 @@ export default {
   computed: {
     ...mapState({
       userName: (s) => s.userInfo.userName,
+      chats: (s) => s.socialInfo.chats,
     }),
   },
   data() {
     return {
       currentMsg: '',
-      chats: [
-        {
-          user: 'nabil',
-          isMe: true,
-          msg: 'Yo, iz me ur boi',
-        },
-        {
-          user: 'guiltyspark',
-          isMe: false,
-          msg: 'sup dawg',
-        },
-      ],
     };
   },
 };
