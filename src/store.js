@@ -25,7 +25,9 @@ function relayOverNetwork(state, payload, functionName) {
       });
     } else {
       console.log(`sending ${functionName} to specific connection`);
-      payload.connection.send(payload);
+      const { connection } = payload;
+      delete payload.connection;
+      connection.send(payload);
     }
   }
 }
@@ -89,11 +91,11 @@ export default new Vuex.Store({
           await dispatch('setupConnection', connection);
           relayOverNetwork(
             state,
-            { gameName: state.userInfo.gameName },
+            { gameName: state.userInfo.gameName, connection },
             'setGameName',
           );
           state.userInfo.allUsers.forEach((user) => {
-            relayOverNetwork(state, { user }, 'addUser');
+            relayOverNetwork(state, { user, connection }, 'addUser');
           });
           // await dispatch('initializeNewConnection', connection);
         });
@@ -114,7 +116,7 @@ export default new Vuex.Store({
         state.userInfo.gameId = gameId;
         commit('addUser', { user: userName });
         await dispatch('setupConnection', connection);
-        relayOverNetwork(state, { user: userName }, 'addUser');
+        relayOverNetwork(state, { user: userName, connection }, 'addUser');
       });
 
       // });
