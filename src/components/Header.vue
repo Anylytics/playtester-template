@@ -57,7 +57,7 @@ export default {
         },
         trapFocus: true,
         onConfirm: (gameId) => {
-          this.$store.commit('joinGame', gameId);
+          this.$store.dispatch('joinSession', { gameId, userName: 'Gokul' });
           this.$router.push({ path: 'game', query: { gameId } });
         },
       });
