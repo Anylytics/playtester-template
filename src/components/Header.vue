@@ -22,7 +22,8 @@
 
 <script>
 import { mapState } from 'vuex';
-import CreateForm from './Social/CreateForm.vue';
+import CreateForm from './Network/CreateForm.vue';
+import JoinForm from './Network/JoinForm.vue';
 
 export default {
   name: 'Header',
@@ -49,18 +50,24 @@ export default {
       });
     },
     openJoinModal() {
-      this.$buefy.dialog.prompt({
-        message: 'Please enter the game ID',
-        inputAttrs: {
-          placeholder: 'e.g. q6h1ftzqldf00000',
-          maxlength: 16,
-        },
+      this.$buefy.modal.open({
+        parent: this,
+        component: JoinForm,
+        hasModalCard: true,
         trapFocus: true,
-        onConfirm: (gameId) => {
-          this.$store.dispatch('joinSession', { gameId, userName: 'Gokul' });
-          this.$router.push({ path: 'game', query: { gameId } });
-        },
       });
+      // this.$buefy.dialog.prompt({
+      //   message: 'Please enter the game ID',
+      //   inputAttrs: {
+      //     placeholder: 'e.g. q6h1ftzqldf00000',
+      //     maxlength: 16,
+      //   },
+      //   trapFocus: true,
+      //   onConfirm: (gameId) => {
+      //     this.$store.dispatch('joinSession', { gameId, userName: 'Gokul' });
+      //     this.$router.push({ path: 'game', query: { gameId } });
+      //   },
+      // });
     },
   },
 };

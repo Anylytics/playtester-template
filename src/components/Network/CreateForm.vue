@@ -35,7 +35,7 @@
           v-on:click="createGame()"
           :disabled="gameId === null"
         >
-          Greate Game!
+          Create Game!
         </button>
       </footer>
     </div>
@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import { genRandomUserName } from '@/utils';
 import { mapState } from 'vuex';
 
 export default {
@@ -58,7 +59,7 @@ export default {
     return {
       // TODO: Randomize these names
       placeGameName: 'Trident Spectre',
-      placeUserName: 'GuitySpark',
+      placeUserName: genRandomUserName(),
       gameName: null,
       userName: null,
       // gameId: null,
@@ -71,16 +72,10 @@ export default {
   },
   methods: {
     createGame() {
-      if (this.gameName === null) {
-        this.gameName = this.placeGameName;
-      }
-      if (this.userName === null) {
-        this.userName = this.placeUserName;
-      }
       this.$store
         .dispatch('initHost', {
-          gameName: this.gameName,
-          userName: this.userName,
+          gameName: this.gameName || this.placeGameName,
+          userName: this.userName || this.placeUserName,
         })
         .then(() => {
           this.$router.push({ path: 'game', query: { gameid: this.gameId } });
