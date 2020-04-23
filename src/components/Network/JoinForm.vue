@@ -50,6 +50,7 @@ export default {
           userName: this.userName || this.placeUserName,
         })
         .then(() => {
+          console.log('then statement');
           this.$router.push({ path: 'game', query: { gameId: this.gameId } });
           this.$parent.close();
         });

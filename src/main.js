@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import Vue from 'vue';
-import VuePeerJS from 'vue-peerjs';
-import Peer from 'peerjs';
+// import VuePeerJS from 'vue-peerjs';
+// import Peer from 'peerjs';
 import Buefy from 'buefy';
 import 'buefy/dist/buefy.css';
 import Router from 'vue-router';

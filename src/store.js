@@ -1,39 +1,13 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import Peer from 'peerjs';
-// import { getField, updateField } from 'vuex-map-fields';
-// import { randomInteger } from './utils';
+import { networkingPlugin, relayOverNetwork } from './networking';
 
 Vue.use(Vuex);
 
-/* eslint-disable no-param-reassign, no-console */
-function relayOverNetwork(state, payload, functionName) {
-  // if (typeof payload !== 'object') {
-  //   payload = { payload };
-  // }
-  if (
-    payload.fromNetwork === undefined
-    && state.userInfo.connections.length > 0
-  ) {
-    payload.functionName = functionName;
-    if (payload.connection === undefined) {
-      console.log(
-        `sending ${functionName} to ${state.userInfo.connections.length} connections`,
-      );
-      state.userInfo.connections.forEach((con) => {
-        con.send(payload);
-      });
-    } else {
-      console.log(`sending ${functionName} to specific connection`);
-      const { connection } = payload;
-      delete payload.connection;
-      connection.send(payload);
-    }
-  }
-}
-
 /* eslint-disable no-param-reassign */
 export default new Vuex.Store({
+  plugins: [networkingPlugin],
   state: {
     userInfo: {
       // TODO: rename userInfo to something like "networkingInfo",
@@ -56,20 +30,14 @@ export default new Vuex.Store({
     addConnection(state, connection) {
       state.userInfo.connections.push(connection);
     },
-    setGameName(state, payload) {
-      relayOverNetwork(state, payload, 'setGameName');
-      const { gameName } = payload;
+    setGameName(state, { gameName }) {
       state.userInfo.gameName = gameName;
     },
-    addUser(state, payload) {
-      relayOverNetwork(state, payload, 'addUser');
-      const { user } = payload;
+    addUser(state, { user }) {
       console.log(`Adding user ${user}`);
       state.userInfo.allUsers.push(user);
     },
-    addMessage(state, payload) {
-      relayOverNetwork(state, payload, 'addMessage');
-      const { message } = payload;
+    addMessage(state, { message }) {
       state.socialInfo.chats.push(message);
     },
   },
@@ -79,6 +47,7 @@ export default new Vuex.Store({
     //   // All implementation specific logic should go here!
     // },
     initNetworking({ state }) {
+      console.log('init networking');
       const peerjs = new Peer({});
       peerjs.on('open', (id) => {
         console.log(`PeerJs initialized. id: ${id}`);
@@ -87,56 +56,51 @@ export default new Vuex.Store({
       });
     },
     async initHost({ state, dispatch, commit }, { gameName, userName }) {
-      // return new Promise((resolve) => {
-
       state.userInfo.userName = userName;
       state.userInfo.gameId = state.userInfo.myId;
-      commit('setGameName', { gameName });
+      commit('setGameName', gameName);
       commit('addUser', { user: userName });
       state.userInfo.peerjs.on('connection', async (connection) => {
         connection.on('open', async () => {
           console.log('Host received a connection');
           await dispatch('setupConnection', connection);
           relayOverNetwork(
-            state,
-            { gameName: state.userInfo.gameName, connection },
             'setGameName',
+            { gameName: state.userInfo.gameName },
+            connection,
           );
           state.userInfo.allUsers.forEach((user) => {
-            relayOverNetwork(state, { user, connection }, 'addUser');
+            relayOverNetwork('addUser', { user }, connection);
           });
           // await dispatch('initializeNewConnection', connection);
         });
       });
       console.log(`Initialized host ${state.userInfo.gameId}`);
-      // resolve();
-      // });
     },
     async joinSession({ state, dispatch, commit }, { gameId, userName }) {
-      // return new Promise((resolve) => {
       console.log(`joining ${gameId}`);
       const connection = state.userInfo.peerjs.connect(gameId);
-      await connection.on('open', async () => {
+      const yas = await connection.on('open', async () => {
         console.log(`Connected to ${gameId}`);
         // At this point, we should be connected to the host
         // state.userInfo.peerjs = peerjs;
-        state.userInfo.userName = userName;
+        // state.userInfo.userName = userName;
         state.userInfo.gameId = gameId;
-        commit('addUser', { user: userName });
         await dispatch('setupConnection', connection);
-        relayOverNetwork(state, { user: userName, connection }, 'addUser');
+        commit('addUser', { user: userName });
+        // relayOverNetwork('addUser', { user: userName }, connection);
       });
-
-      // });
-      // });
+      console.log('end joinSession');
+      console.log(typeof yas);
     },
+    /* eslint-disable no-underscore-dangle */
     setupConnection({ state, commit }, connection) {
       // state.userInfo.connections.push(connection);
       commit('addConnection', connection);
-      console.log(`Connection setup ${connection}`);
+      console.log('Connection setup');
       // This is the main networking loop
       connection.on('data', (payload) => {
-        console.log('recieved ', payload.functionName);
+        console.log('recieved ', payload._functionName);
         // forward it on, if we need to
         state.userInfo.connections.forEach((con) => {
           if (con !== connection) {
@@ -145,8 +109,8 @@ export default new Vuex.Store({
           }
         });
         // Mark that the data came over the network and run the function
-        payload.fromNetwork = true;
-        commit(payload.functionName, payload);
+        payload._fromNetwork = true;
+        commit(payload._functionName, payload);
       });
     },
   },
