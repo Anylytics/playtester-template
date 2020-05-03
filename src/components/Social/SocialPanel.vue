@@ -31,14 +31,13 @@ export default {
   components: { Chat, Lobby },
   methods: {
     togglePanel() {
-      console.log('HELLO!');
       this.panelActive = !this.panelActive;
     },
   },
   data() {
     return {
       activeTab: 1,
-      panelActive: true,
+      panelActive: false,
     };
   },
 };
