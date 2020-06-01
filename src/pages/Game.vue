@@ -1,6 +1,5 @@
 <template>
   <div>
-    <p>Feature Factory!</p>
     <FFGameBoard />
     <SocialPanel />
   </div>

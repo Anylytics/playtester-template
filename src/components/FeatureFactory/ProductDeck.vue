@@ -14,6 +14,7 @@
 <script>
 import Deck from '@/utils/deckGenerator';
 import Storage from '@/utils/storage';
+import GameState from './gameStore';
 
 const productDecks = {};
 
@@ -50,16 +51,21 @@ export default {
         const { easyDeck, hardDeck } = flattenData(products);
         productDecks.easy = new Deck(easyDeck);
         productDecks.hard = new Deck(hardDeck);
-        console.log(productDecks);
+        productDecks.easy.shuffle();
+        productDecks.hard.shuffle();
         this.easyProducts = productDecks.easy.deck;
         this.hardProducts = productDecks.hard.deck;
       });
     },
     drawEasy() {
-      console.log(productDecks.easy.draw());
+      const card = productDecks.easy.draw();
+      console.log(card);
+      GameState.commit('addCard', card);
     },
     drawHard() {
-      console.log(productDecks.hard.draw());
+      const card = productDecks.hard.draw();
+      console.log(card);
+      GameState.commit('addCard', card);
     },
   },
 };

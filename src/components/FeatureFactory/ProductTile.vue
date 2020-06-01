@@ -7,14 +7,47 @@
 <script>
 import * as d3 from 'd3';
 import ProductTile from '@/assets/product-tile.svg';
+import colorTools from '@/utils/colorTools';
+
+function fillSchematic(card, model) {
+  model.schematic_color.forEach((val, idx) => {
+    const slot = card.select(`#${colorTools.getIdToName()[idx]}`);
+    let color = val;
+    if (val === '#ecf0f1') {
+      color = 'white';
+    }
+    slot
+      .attr('selected', '0')
+      .style('fill', color)
+      .style('fill-opacity', 0.25)
+      .style('stroke', color);
+    slot.on('click', () => {
+      const opacity = slot.attr('selected') === '0' ? 1 : 0.25;
+      const selected = slot.attr('selected') === '0' ? '1' : '0';
+      slot.style('fill-opacity', opacity);
+      slot.attr('selected', selected);
+    });
+  });
+}
 
 function onMount() {
-  // const cardmodel = this.cardmodel;
+  /* eslint-disable-next-line */
+  const cardmodel = this.cardmodel;
   this.card = d3.select(`svg#${this.identifier}`);
-  console.log(this.card);
   // TODO: Make this more efficient, pulling XML on every new card addition
   d3.xml(ProductTile).then((data) => {
     this.card.node().append(data.documentElement);
+    const cardTitle = this.card.select('#featureLabel').select('textPath');
+    const cardValue = this.card.select('#val').select('tspan');
+    const cardFuture = this.card.select('#future').select('tspan');
+    const cardFuture2 = this.card.select('#future2').select('tspan');
+
+    cardTitle.text(cardmodel.product);
+    cardValue.text(cardmodel.value);
+    cardFuture.text(cardmodel.futures[0] || '');
+    cardFuture2.text(cardmodel.futures[1] || '');
+
+    fillSchematic(this.card, cardmodel);
   });
 }
 

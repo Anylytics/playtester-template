@@ -1,69 +1,77 @@
 <template>
-  <div class="stretch-right">
-    <div class="game-panel panel-narrow">
-      <div class="card add-margin">
-        <ResourceContainer panel-title="BENCH" />
+  <div>
+    <WeekTracker />
+    <DayTracker />
+    <div class="stretch-right">
+      <div class="game-panel panel-narrow">
+        <div class="card add-margin">
+          <ResourceContainer panel-title="BENCH" />
+        </div>
+        <div class="card add-margin">
+          <BankVault />
+        </div>
+        <ProductDeck />
+        <div class="card add-margin">
+          <EventDeck />
+        </div>
       </div>
-      <div class="card add-margin">
-        <BankVault />
-      </div>
-      <ProductDeck />
-      <div class="card add-margin">
-        <EventDeck />
-      </div>
-    </div>
-    <div class="game-panel panel-wide">
-      TODO
-      <draggable
-        class="min-height"
-        ghost-class="ghost"
-        :list="todo"
-        @start="drag = true"
-        @end="drag = false"
-        group="cards"
-      >
-        <ProductTile
+      <div class="game-panel panel-wide">
+        TODO
+        <draggable
+          class="drag-container"
           ghost-class="ghost"
-          v-for="card in todo"
-          :identifier="card"
-          :key="card"
-          class=""
-        />
-      </draggable>
-    </div>
-    <div class="game-panel panel-wide">
-      DOING
-      <draggable
-        :list="doing"
-        class="min-height"
-        ghost-class="ghost"
-        @start="drag = true"
-        @end="drag = false"
-        group="cards"
-      >
-        <ProductTile
-          v-for="card in doing"
-          :identifier="card"
-          :key="card"
-          class=""
-        />
-      </draggable>
-    </div>
-    <div class="game-panel panel-wide">
-      SHIPPED
-      <draggable
-        :list="done"
-        @start="drag = true"
-        @end="drag = false"
-        group="cards"
-      >
-        <ProductTile
-          v-for="card in done"
-          :identifier="card"
-          :key="card"
-          class=""
-        />
-      </draggable>
+          :list="todo"
+          @start="drag = true"
+          @end="drag = false"
+          group="cards"
+        >
+          <ProductTile
+            ghost-class="ghost"
+            v-for="card in todo"
+            :identifier="card.id"
+            :cardmodel="card"
+            :key="card.id"
+            class=""
+          />
+        </draggable>
+      </div>
+      <div class="game-panel panel-wide">
+        DOING
+        <draggable
+          :list="doing"
+          class="drag-container"
+          ghost-class="ghost"
+          @start="drag = true"
+          @end="drag = false"
+          group="cards"
+        >
+          <ProductTile
+            v-for="card in doing"
+            :identifier="card.id"
+            :cardmodel="card"
+            :key="card.id"
+            class=""
+          />
+        </draggable>
+      </div>
+      <div class="game-panel panel-wide">
+        SHIPPED
+        <draggable
+          :list="done"
+          class="drag-container"
+          @start="drag = true"
+          @end="drag = false"
+          group="cards"
+        >
+          <ProductTile
+            v-for="card in done"
+            :identifier="card.id"
+            :cardmodel="card"
+            :key="card.id"
+            class=""
+          />
+        </draggable>
+      </div>
     </div>
   </div>
 </template>
@@ -75,6 +83,9 @@ import ProductTile from './ProductTile.vue';
 import BankVault from './BankVault.vue';
 import EventDeck from './EventCardDeck.vue';
 import ProductDeck from './ProductDeck.vue';
+import GameState from './gameStore';
+import WeekTracker from './WeekTracker.vue';
+import DayTracker from './DayTracker.vue';
 
 export default {
   name: 'GameBoard',
@@ -85,13 +96,25 @@ export default {
     draggable,
     EventDeck,
     ProductDeck,
+    WeekTracker,
+    DayTracker,
   },
-  data() {
-    return {
-      todo: ['zer', 'on', 'deux'],
-      doing: ['dsf', 'ds'],
-      done: ['sd', 'oiefoidsfj'],
-    };
+  computed: {
+    todo: {
+      get() {
+        return GameState.state.todo;
+      },
+    },
+    doing: {
+      get() {
+        return GameState.state.doing;
+      },
+    },
+    done: {
+      get() {
+        return GameState.state.done;
+      },
+    },
   },
 };
 </script>
@@ -140,7 +163,7 @@ export default {
   margin: 0 24px;
   opacity: 0.5;
 }
-.min-height {
-  min-height: 256px;
+.drag-container {
+  min-height: 100%;
 }
 </style>

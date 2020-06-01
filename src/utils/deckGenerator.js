@@ -28,4 +28,8 @@ export default class Deck {
     this.drawn.splice(0, this.drawn.length);
     this.shuffle();
   }
+
+  export() {
+    return this.deck.concat(this.drawn);
+  }
 }
