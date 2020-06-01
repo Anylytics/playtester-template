@@ -21,19 +21,19 @@
 </template>
 <script>
 export default {
-  name: 'Sandbox',
+  name: 'HandOfCards',
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .hand {
-  position: relative;
+  position: absolute;
   margin-top: 96px;
   transform: rotate(-4deg);
 }
 .hand > * {
-  position: absolute;
+  position: fixed;
   transition: 0.4s ease-out;
   opacity: 0.7;
 }
@@ -59,7 +59,9 @@ export default {
 .resource-card {
   height: 256px;
   width: 192px;
+  min-width: 200px;
   cursor: pointer;
+  border: 1px red dashed;
   text-align: center;
   margin: 0;
   padding: 0;
