@@ -1,23 +1,33 @@
-const events = `Pandemic! A pandemic is upon us, earn $100,000,000 if you help the CDC with a medical clinic and an intelligence center to coordinate operations. 
-War! The Department of Defense has called upon us to support the country. Earn $100,000,000 if you build a surveillance drone and antibiotics. 
-Drought! A drought is upon us, earn $100,000,000 if you mass produce cloud seeding technologies and an irrigation system.
-Film Festival! A film festival with a sustainability push is upon us! Earn $100,000,000  if you produce a movie and a solar energy system. 
-Super Bowl!  Earn $100,000,000 if you’ve built a sports stadium and a public transportation system. 
-Oscar-Themed Prom Night is upon us! Earn extra $ if you build a popcorn machine and limo! 
-Road Trip season is upon us! To ensure a smooth and fun ride build a fuel station and reality show podcast. X dollars in extra revenue. 
-A cheese festival on a private island has recruited our services! X bonus if you build a ferry and dairy farm. 
-A comic book festival is happening on a remote desert! X bonus if you build comic book merchandise and a private jet. 
-A vegan-friendly owner has just bought our local sports team! X bonus if you build a crop farm and concession stand.
-Market Research Magazine concluded that luxury restaurants need to provide more premium coffee options! Extra bonus if you build a 5 star restaurant and coffee plantation 
-Naval-themed pop-up museums are springing up around the country and customers want to take home memories! Extra bonus points if you build a souvenir shop and night vision goggles 
-It’s proposal season! Make it a night to remember for couples who are getting engaged in romantic settings and going to a sporting event in style afterwards. Bonus points for building a pier and luxury box 
-Beach season is upon us! X Bonus points for building scuba gear and a luxury hotel 
-Unfortunately, water slide accidents are on the rise. X bonus points if you build a safe water slide and wound care supplies to help the local community 
-Our local international airport is undergoing renovations. X bonus if you build an arrivals monitor and spa for our lounge-loving guests! 
-Fans are dying for the final installment of a movie series to come out and want to dress up as their favorite characters! X amount if you build a Superhero Movie and a Character costume!
-Our city citizens are demanding that  more efforts need to be made to increase tourism. X bonus if you build a theme park and ticket counter. 
-A hot new farm to table restaurant just opened up around the corner! X bonus if you build a booking app and plow (for restaurant decorations!). 
-Parties out in the sea are on the rise! X bonus if you build a cruise ship and balloons. `.split(
+const events = `Pandemic! A pandemic is upon us, earn an extra 2 coins for every healthcare product shipped in the next two weeks.
+War! The Department of Defense has called upon us to support the country. Earn 3 extra coins for every simple defense product you build in the next two weeks.
+Our city is hosting the Super Bowl next year! Earn 5 extra Revenue Points if a sports stadium and metro rail is built. End game effect.
+Film Festival! A film festival with all the hottest critics in town is approaching. Earn an extra 2 points when you build a movie theater or any product that has a movie theater as a future in the next two weeks.
+A famous vegan-friendly chef is in town and scoping out our local farms for business. Extra 2 extra points for any agriculture product built in the next two weeks.
+Our local international airport and harbor are undergoing renovations. 3 extra points if you build any product that has an airport or harbor as a future in the next two weeks.
+Our city citizens are demanding that more efforts need to be made to increase tourism. 2 bonus points when you build a theme park or hotel or any product that has a theme park/hotel as a future in the next two weeks.
+Our governor has announced that he wants to grow solar and wind usage in the city. 7 extra Revenue Points if you build a solar farm and a wind farm. End game effect.
+Management has put in a large investment towards training. In the next week, each training card played will count as two sessions instead of one.
+The company raised the salaries of the sales team and we see a huge influx of talent coming into the company. At the start of next week, you may play a sales person + take another action.
+The economy is booming! At the beginning of next week, you may add a player to your team mat for free + take another action.
+We have given our engineers extra time in their day to work on creative projects. This has led to a huge productivity increase. At the beginning of next week, each staffing token will count as 2x if staffing engineers.
+Leadership has invested in several supply chain-focused trainings recently, leading to a huge morale increase for operations team members. At the beginning of next week, you can staff an operations team member for free + take another action.
+The company has received a huge round of financing and our finance team members are energized. Next turn, each staffing token will count as 2x if staffing finance staff.
+The FBI has enlisted our services for an underground operation. 7 extra Revenue Points if an intelligence center and train station is built. End game effect.
+The economy is headed towards a recession. Please fire someone from your team mat at the beginning of next week. If no one is on your team mat, nothing happens.
+The annual sales conference is approaching, and all marketers in the company will be attending. You may not play a marketer for the next week.
+Our company is being investigated for embezzlement. All finance team members are part of the investigation. You may not play a finance person for the next two weeks.
+A 1:1 with your manager led to the conclusion that sales and operations team members need more experience. Everyone has to play a sales or operations training card at the beginning of next week. If you don’t have either card or can’t play the card, your weekly turn is skipped.
+Our company is cutting down on training costs. You may not play a training card in the next two weeks.
+Our engineers are feeling undervalued and are staging a protest. You may not play an engineer in the next two weeks.
+Leadership has deprioritized building energy and healthcare products. You will receive 2 less coins for the next two weeks for any products built in these two industries.
+A drought has caused less demand for agriculture production. Any simple agriculture product produced will lead to 1 less coin for the next two weeks.
+An unexplainable flu has caused some of our local beaches and theme parks to close. Make 2 less coins when you build a hotel or theme park or any product that has a hotel or theme park as a future for the next two weeks.
+Skyrocketing gas prices have lowered the demand for travel. 2 fewer points if you build any product in the transportation industry for the next two weeks.
+Streaming services have shaken up the entertainment industry. Lose 2 points when you build a movie theater or any product that has a movie theater as a future in the next two weeks.
+Our governor is very upset with our city’s energy usage practices and is tabling all energy discussions until the next election. 2 fewer points if you build any energy product for the next two weeks.
+World Peace! The need for defense products has come down. 1 fewer point if you build any product in the defense industry for the next two weeks.
+Agriculture experts predict that a pest infestation will hit our region next year. 5 less Revenue Points for each type of farm built. End game effect.
+The most popular healthcare system in our region has a hired competitor firm to expand their buildings. 5 less Revenue Points if an operating room or clinic is built. End game effect.`.split(
   '\n', // eslint-disable-line
 ); // eslint-disable-line
 
