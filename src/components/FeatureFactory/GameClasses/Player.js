@@ -9,8 +9,12 @@ export default class Player {
     return this.hand;
   }
 
-  playCardFromHand(idx) {
-    const drawn = this.deck.splice(idx, 1)[0];
+  playFromHand(idx) {
+    const drawn = this.hand.splice(idx, 1)[0];
     return drawn;
+  }
+
+  resetHand() {
+    this.hand.length = 0;
   }
 }

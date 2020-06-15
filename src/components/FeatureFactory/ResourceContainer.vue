@@ -22,20 +22,8 @@
 </template>
 <script>
 import colorTools from '@/utils/colorTools';
-import Deck from '@/utils/deckGenerator';
 
 const { ColorUtility } = colorTools;
-
-const StaffDeck = new Deck([
-  '#c23616',
-  '#44bd32',
-  '#0097e6',
-  '#fa983a',
-  '#8c7ae6',
-]);
-console.log(StaffDeck);
-StaffDeck.shuffle();
-console.log(StaffDeck);
 
 export default {
   name: 'ResourceContainer',

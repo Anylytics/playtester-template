@@ -9,24 +9,41 @@ import * as d3 from 'd3';
 import ProductTile from '@/assets/product-tile.svg';
 import colorTools from '@/utils/colorTools';
 
+function rotateColor(incomingColor) {
+  const { ColorUtility } = colorTools;
+  const newColor = ColorUtility.getNextColor(incomingColor);
+  return newColor;
+}
+
 function fillSchematic(card, model) {
   model.schematic_color.forEach((val, idx) => {
     const slot = card.select(`#${colorTools.getIdToName()[idx]}`);
     let color = val;
+    let continueToBindClick = true;
     if (val === '#ecf0f1') {
       color = 'white';
+      continueToBindClick = false;
     }
     slot
       .attr('selected', '0')
-      .style('fill', color)
+      .style('fill', colorTools.flatWhite)
       .style('fill-opacity', 0.25)
       .style('stroke', color);
+    if (!continueToBindClick) return;
+
     slot.on('click', () => {
-      const opacity = slot.attr('selected') === '0' ? 1 : 0.25;
-      const selected = slot.attr('selected') === '0' ? '1' : '0';
-      slot.style('fill-opacity', opacity);
-      slot.attr('selected', selected);
+      // const opacity = slot.attr('selected') === '0' ? 1 : 0.25;
+      // const selected = slot.attr('selected') === '0' ? '1' : '0';
+      // slot.style('fill-opacity', opacity);
+      // slot.attr('selected', selected);
+      const currentColor = slot.attr('fill');
+      const newColor = rotateColor(currentColor) || colorTools.flatWhite;
+      slot.style('fill-opacity', 1);
+      slot.style('fill', newColor);
+      slot.attr('fill', newColor);
     });
+    console.log(rotateColor(color));
+    slot.on('contextmenu', () => false);
   });
 }
 

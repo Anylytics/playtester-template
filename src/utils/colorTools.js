@@ -4,8 +4,23 @@ const colorMap = {
   2: '#0097e6',
   3: '#fa983a',
   4: '#8c7ae6',
+  5: '#2c3e50',
+  6: '#95a5a6',
 };
 const flatWhite = '#ecf0f1';
+
+function getColorByName(colorName) {
+  const colorNameMap = {
+    red: 0,
+    orange: 3,
+    green: 1,
+    blue: 2,
+    purple: 4,
+    black: 5,
+    grey: 6,
+  };
+  return colorMap[colorNameMap[colorName]];
+}
 
 function genNextIndex(id, arr) {
   const maxIdx = arr ? arr.length - 1 : 4;
@@ -98,4 +113,5 @@ export default {
   genNextIndex,
   flatWhite,
   ColorUtility,
+  getColorByName,
 };
