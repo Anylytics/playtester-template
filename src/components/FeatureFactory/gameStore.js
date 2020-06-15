@@ -7,12 +7,17 @@ import Day from './GameClasses/Day';
 
 Vue.use(Vuex);
 
+function copyObj(o) {
+  return JSON.parse(JSON.stringify(o));
+}
+
 const WEEKSINGAME = 12;
 const DAYSINWEEK = 5;
 
 const Game = new Vuex.Store({
   state: {
     currentPlayer: new Player('HOST'),
+    players: [],
     actions: new ActionDeck(),
     todo: [],
     doing: [],
@@ -25,6 +30,29 @@ const Game = new Vuex.Store({
     days: new Array(DAYSINWEEK).fill().map((item, index) => new Day(1 + index)),
   },
   mutations: {
+    addPlayer(state, name) {
+      const newPlayer = new Player(name);
+      state.players.push(newPlayer);
+      // const numPlayers = state.players.length;
+      // state.actions = new ActionDeck(numPlayers);
+    },
+    drawCardFromPlayer(state, data) {
+      console.log(`Now playing player ${data.playerIdx} card ${data.cardIdx}`);
+      state.players[data.playerIdx].playFromHand(data.cardIdx);
+    },
+    shuffleActions(state) {
+      state.actions.reset();
+      state.actions.shuffle();
+      state.players.forEach((player) => {
+        player.resetHand();
+        player.addToHand(copyObj(state.actions.draw()));
+        player.addToHand(copyObj(state.actions.draw()));
+        player.addToHand(copyObj(state.actions.draw()));
+        player.addToHand(copyObj(state.actions.draw()));
+        player.addToHand(copyObj(state.actions.draw()));
+        player.addToHand(copyObj(state.actions.draw()));
+      });
+    },
     addCard(state, card) {
       state.todo.push(card);
     },
@@ -48,5 +76,6 @@ const Game = new Vuex.Store({
 */
 Game.commit('setWeek', 1);
 Game.commit('setDay', 1);
+Game.commit('shuffleActions');
 
 export default Game;

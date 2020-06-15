@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class>
     <b-loading :active.sync="loading" :can-cancel="true"></b-loading>
     <b-button type="is-light" v-on:click="uploadFile">Upload Deck</b-button>
     <div class="product-deck card" v-if="easyProducts" v-on:click="drawEasy">
@@ -49,6 +49,7 @@ export default {
         this.loading = false;
         const products = JSON.parse(data.PRODUCTS);
         const { easyDeck, hardDeck } = flattenData(products);
+
         productDecks.easy = new Deck(easyDeck);
         productDecks.hard = new Deck(hardDeck);
         productDecks.easy.shuffle();

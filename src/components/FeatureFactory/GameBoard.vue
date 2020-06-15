@@ -1,7 +1,14 @@
 <template>
   <div>
-    <WeekTracker />
-    <DayTracker />
+    <div class="columns">
+      <div class="column">
+        <PlayerTracker class="card" />
+      </div>
+      <div class="column">
+        <WeekTracker />
+        <DayTracker />
+      </div>
+    </div>
     <div class="stretch-right">
       <div class="game-panel panel-narrow">
         <div class="card add-margin">
@@ -31,7 +38,7 @@
             :identifier="card.id"
             :cardmodel="card"
             :key="card.id"
-            class=""
+            class
           />
         </draggable>
       </div>
@@ -50,7 +57,7 @@
             :identifier="card.id"
             :cardmodel="card"
             :key="card.id"
-            class=""
+            class
           />
         </draggable>
       </div>
@@ -68,7 +75,7 @@
             :identifier="card.id"
             :cardmodel="card"
             :key="card.id"
-            class=""
+            class
           />
         </draggable>
       </div>
@@ -86,6 +93,7 @@ import ProductDeck from './ProductDeck.vue';
 import GameState from './gameStore';
 import WeekTracker from './WeekTracker.vue';
 import DayTracker from './DayTracker.vue';
+import PlayerTracker from './PlayerTracker.vue';
 
 export default {
   name: 'GameBoard',
@@ -98,6 +106,7 @@ export default {
     ProductDeck,
     WeekTracker,
     DayTracker,
+    PlayerTracker,
   },
   computed: {
     todo: {
