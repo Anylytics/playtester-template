@@ -18,7 +18,7 @@ const Game = new Vuex.Store({
   state: {
     currentPlayer: new Player('HOST'),
     players: [],
-    actions: new ActionDeck(),
+    actions: new ActionDeck(6),
     todo: [],
     doing: [],
     done: [],
