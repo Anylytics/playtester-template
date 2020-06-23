@@ -43,4 +43,9 @@ export default class ActionDeck extends Deck {
     });
     super(cards);
   }
+
+  reHydrate(data) {
+    this.deck = data.deck;
+    this.drawn = data.drawn;
+  }
 }
