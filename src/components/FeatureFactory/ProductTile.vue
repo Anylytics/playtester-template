@@ -42,7 +42,6 @@ function fillSchematic(card, model) {
       slot.style('fill', newColor);
       slot.attr('fill', newColor);
     });
-    console.log(rotateColor(color));
     slot.on('contextmenu', () => false);
   });
 }
@@ -52,8 +51,10 @@ function onMount() {
   const cardmodel = this.cardmodel;
   this.card = d3.select(`svg#${this.identifier}`);
   // TODO: Make this more efficient, pulling XML on every new card addition
+  console.log('on mount', cardmodel, this.card);
   d3.xml(ProductTile).then((data) => {
     this.card.node().append(data.documentElement);
+    console.log('fetched svg', this.card, data.documentElement);
     const cardTitle = this.card.select('#featureLabel').select('textPath');
     const cardValue = this.card.select('#val').select('tspan');
     const cardFuture = this.card.select('#future').select('tspan');
