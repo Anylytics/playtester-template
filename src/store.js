@@ -1,30 +1,27 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import Peer from 'peerjs';
-// import { getField, updateField } from 'vuex-map-fields';
-// import { randomInteger } from './utils';
+import mutations from '@/mutations';
+import { Logger, getPeer } from '@/utils';
 
 Vue.use(Vuex);
 
+const networkConsole = new Logger('🌐 NETWORK STATE');
+
 /* eslint-disable no-param-reassign, no-console */
 function relayOverNetwork(state, payload, functionName) {
-  // if (typeof payload !== 'object') {
-  //   payload = { payload };
-  // }
-  if (
-    payload.fromNetwork === undefined
-    && state.userInfo.connections.length > 0
-  ) {
+  const isLocal = payload.fromNetwork === undefined;
+  const hasConnections = state.userInfo.connections.length > 0;
+  if (isLocal && hasConnections) {
     payload.functionName = functionName;
     if (payload.connection === undefined) {
-      console.log(
+      networkConsole.log(
         `sending ${functionName} to ${state.userInfo.connections.length} connections`,
       );
       state.userInfo.connections.forEach((con) => {
         con.send(payload);
       });
     } else {
-      console.log(`sending ${functionName} to specific connection`);
+      networkConsole.log(`sending ${functionName} to specific connection`);
       const { connection } = payload;
       delete payload.connection;
       connection.send(payload);
@@ -35,6 +32,10 @@ function relayOverNetwork(state, payload, functionName) {
 /* eslint-disable no-param-reassign */
 export default new Vuex.Store({
   state: {
+    system: {
+      initialized: false,
+      error: false,
+    },
     userInfo: {
       // TODO: rename userInfo to something like "networkingInfo",
       // since it will contain everything pertinent to this networking module
@@ -51,20 +52,27 @@ export default new Vuex.Store({
     socialInfo: {
       chats: [],
     },
+    // Will hold gamestate
+    gameInfo: {
+      // Simple implementation for now, dump game's networkable
+      //    state into a string, let consumer be responsible
+      //    for parsing & conflict resolution
+      blob: '',
+    },
   },
   mutations: {
     addConnection(state, connection) {
       state.userInfo.connections.push(connection);
     },
-    setGameName(state, payload) {
-      relayOverNetwork(state, payload, 'setGameName');
+    [mutations.SET_GAME_NAME](state, payload) {
+      relayOverNetwork(state, payload, mutations.SET_GAME_NAME);
       const { gameName } = payload;
       state.userInfo.gameName = gameName;
     },
-    addUser(state, payload) {
-      relayOverNetwork(state, payload, 'addUser');
+    [mutations.ADD_USER](state, payload) {
+      relayOverNetwork(state, payload, mutations.ADD_USER);
       const { user } = payload;
-      console.log(`Adding user ${user}`);
+      networkConsole.log(`Adding user ${user}`);
       state.userInfo.allUsers.push(user);
     },
     addMessage(state, payload) {
@@ -72,75 +80,76 @@ export default new Vuex.Store({
       const { message } = payload;
       state.socialInfo.chats.push(message);
     },
+    [mutations.SET_GAME_STATE](state, payload) {
+      if (typeof payload.gameState !== 'string') return;
+      relayOverNetwork(state, payload, mutations.SET_GAME_STATE);
+      state.gameInfo.blob = payload.gameState;
+    },
   },
   actions: {
-    // initializeNewConnection({ state }, connection) {
-    //   // A new user has joined, synchronize state with them
-    //   // All implementation specific logic should go here!
-    // },
-    initNetworking({ state }) {
-      const peerjs = new Peer({});
-      peerjs.on('open', (id) => {
-        console.log(`PeerJs initialized. id: ${id}`);
+    async initNetworking({ state }) {
+      try {
+        const { peerjs, id } = await getPeer();
+        networkConsole.log(`PeerJs initialized. id: ${id}`);
         state.userInfo.peerjs = peerjs;
         state.userInfo.myId = id;
-      });
+        state.system.initialized = true;
+      } catch (err) {
+        // Neither server available
+        console.error('No peerjs servers available', err);
+        state.system.initialized = false;
+        state.system.error = true;
+      }
     },
     async initHost({ state, dispatch, commit }, { gameName, userName }) {
-      // return new Promise((resolve) => {
-
       state.userInfo.userName = userName;
       state.userInfo.gameId = state.userInfo.myId;
-      commit('setGameName', { gameName });
-      commit('addUser', { user: userName });
+      commit(mutations.SET_GAME_NAME, { gameName });
+      commit(mutations.ADD_USER, { user: userName });
       state.userInfo.peerjs.on('connection', async (connection) => {
         connection.on('open', async () => {
-          console.log('Host received a connection');
+          networkConsole.log('Host received a connection');
           await dispatch('setupConnection', connection);
           relayOverNetwork(
             state,
             { gameName: state.userInfo.gameName, connection },
-            'setGameName',
+            mutations.SET_GAME_NAME,
           );
           state.userInfo.allUsers.forEach((user) => {
-            relayOverNetwork(state, { user, connection }, 'addUser');
+            relayOverNetwork(state, { user, connection }, mutations.ADD_USER);
           });
-          // await dispatch('initializeNewConnection', connection);
         });
       });
-      console.log(`Initialized host ${state.userInfo.gameId}`);
-      // resolve();
-      // });
+      networkConsole.log(`Initialized host ${state.userInfo.gameId}`);
     },
     async joinSession({ state, dispatch, commit }, { gameId, userName }) {
-      // return new Promise((resolve) => {
-      console.log(`joining ${gameId}`);
+      networkConsole.log(`joining ${gameId}`, state.userInfo.peerjs);
       const connection = state.userInfo.peerjs.connect(gameId);
       await connection.on('open', async () => {
-        console.log(`Connected to ${gameId}`);
+        networkConsole.log(`Connected to ${gameId}`);
         // At this point, we should be connected to the host
         // state.userInfo.peerjs = peerjs;
         state.userInfo.userName = userName;
         state.userInfo.gameId = gameId;
-        commit('addUser', { user: userName });
+        commit(mutations.ADD_USER, { user: userName });
         await dispatch('setupConnection', connection);
-        relayOverNetwork(state, { user: userName, connection }, 'addUser');
+        relayOverNetwork(
+          state,
+          { user: userName, connection },
+          mutations.ADD_USER,
+        );
       });
-
-      // });
-      // });
     },
     setupConnection({ state, commit }, connection) {
-      // state.userInfo.connections.push(connection);
       commit('addConnection', connection);
-      console.log(`Connection setup ${connection}`);
+      networkConsole.log(`Connection setup ${connection}`);
       // This is the main networking loop
       connection.on('data', (payload) => {
-        console.log('recieved ', payload.functionName);
+        networkConsole.log('recieved ', payload.functionName);
         // forward it on, if we need to
         state.userInfo.connections.forEach((con) => {
           if (con !== connection) {
-            console.log('Forwarding network message');
+            networkConsole.log('Forwarding network message');
             con.send(payload);
           }
         });

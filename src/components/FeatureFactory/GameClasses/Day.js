@@ -4,6 +4,11 @@ export default class Day {
     this.isCurrent = false;
   }
 
+  reHydrate(data) {
+    this.dayNum = data.dayNum;
+    this.isCurrent = data.isCurrent;
+  }
+
   setCurrent() {
     this.isCurrent = true;
   }

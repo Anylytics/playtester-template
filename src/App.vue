@@ -1,17 +1,31 @@
 <template>
   <div id="app">
     <Header />
+    <b-loading :is-full-page="true" :active="!initialized"></b-loading>
+    <b-notification
+      v-if="serverError"
+      type="is-danger"
+      aria-close-label="Close notification"
+      role="alert"
+    >Matchmaking server is unavailable! Please try again later</b-notification>
     <router-view />
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import Header from './components/Header.vue';
 
 export default {
   name: 'App',
   components: {
     Header,
+  },
+  computed: {
+    ...mapState({
+      initialized: (s) => s.system.initialized,
+      serverError: (s) => s.system.error,
+    }),
   },
 };
 </script>

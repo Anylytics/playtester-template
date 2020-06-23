@@ -27,7 +27,7 @@
         <draggable
           class="drag-container"
           ghost-class="ghost"
-          :list="todo"
+          v-model="todo"
           @start="drag = true"
           @end="drag = false"
           group="cards"
@@ -38,37 +38,36 @@
             :identifier="card.id"
             :cardmodel="card"
             :key="card.id"
-            class
           />
         </draggable>
       </div>
       <div class="game-panel panel-wide">
         DOING
         <draggable
-          :list="doing"
           class="drag-container"
           ghost-class="ghost"
+          v-model="doing"
           @start="drag = true"
           @end="drag = false"
           group="cards"
         >
           <ProductTile
+            ghost-class="ghost"
             v-for="card in doing"
             :identifier="card.id"
             :cardmodel="card"
             :key="card.id"
-            class
           />
         </draggable>
       </div>
       <div class="game-panel panel-wide">
         SHIPPED
         <draggable
-          :list="done"
           class="drag-container"
           @start="drag = true"
           @end="drag = false"
           group="cards"
+          v-model="done"
         >
           <ProductTile
             v-for="card in done"
@@ -90,7 +89,7 @@ import ProductTile from './ProductTile.vue';
 import BankVault from './BankVault.vue';
 import EventDeck from './EventCardDeck.vue';
 import ProductDeck from './ProductDeck.vue';
-import GameState from './gameStore';
+import GameStore from './gameStore';
 import WeekTracker from './WeekTracker.vue';
 import DayTracker from './DayTracker.vue';
 import PlayerTracker from './PlayerTracker.vue';
@@ -111,17 +110,36 @@ export default {
   computed: {
     todo: {
       get() {
-        return GameState.state.todo;
+        return GameStore.state.todo;
+      },
+      set(cards) {
+        GameStore.commit('setProductColumn', {
+          column: 'todo',
+          cards,
+        });
       },
     },
     doing: {
       get() {
-        return GameState.state.doing;
+        console.info('Get doing', GameStore.state.doing);
+        return GameStore.state.doing;
+      },
+      set(cards) {
+        GameStore.commit('setProductColumn', {
+          column: 'doing',
+          cards,
+        });
       },
     },
     done: {
       get() {
-        return GameState.state.done;
+        return GameStore.state.done;
+      },
+      set(cards) {
+        GameStore.commit('setProductColumn', {
+          column: 'done',
+          cards,
+        });
       },
     },
   },

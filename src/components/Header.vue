@@ -7,11 +7,9 @@
     </template>
     <template slot="start">
       <b-navbar-item tag="router-link" to="/home">
-        <b>Feature Factory </b>
+        <b>Feature Factory</b>
       </b-navbar-item>
-      <b-navbar-item>
-        {{ currentRouteName }}
-      </b-navbar-item>
+      <b-navbar-item>{{ currentRouteName }}</b-navbar-item>
     </template>
     <template slot="end">
       <b-navbar-item v-on:click="createModal()">New</b-navbar-item>

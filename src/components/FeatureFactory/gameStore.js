@@ -1,9 +1,12 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import store from '@/store';
+import mutations from '@/mutations';
 import Week from './GameClasses/Week';
 import Player from './GameClasses/Player';
 import ActionDeck from './GameClasses/ActionDeck';
 import Day from './GameClasses/Day';
+import GameStateBroadcaster from './GameClasses/GameStateBroadcaster';
 
 Vue.use(Vuex);
 
@@ -13,12 +16,14 @@ function copyObj(o) {
 
 const WEEKSINGAME = 12;
 const DAYSINWEEK = 5;
+const PLAYERS = 6;
 
 const Game = new Vuex.Store({
   state: {
     currentPlayer: new Player('HOST'),
     players: [],
-    actions: new ActionDeck(6),
+    drafting: false,
+    actions: new ActionDeck(PLAYERS),
     todo: [],
     doing: [],
     done: [],
@@ -33,12 +38,17 @@ const Game = new Vuex.Store({
     addPlayer(state, name) {
       const newPlayer = new Player(name);
       state.players.push(newPlayer);
-      // const numPlayers = state.players.length;
-      // state.actions = new ActionDeck(numPlayers);
+    },
+    toggleDrafting(state) {
+      state.drafting = !state.drafting;
+    },
+    setDrafting(state, payload) {
+      state.drafting = payload.drafting;
     },
     drawCardFromPlayer(state, data) {
-      console.log(`Now playing player ${data.playerIdx} card ${data.cardIdx}`);
-      state.players[data.playerIdx].playFromHand(data.cardIdx);
+      const player = state.players[data.playerIdx];
+      const cardPlayed = player.playFromHand(data.cardIdx);
+      if (state.drafting === true) player.reserveToHand(cardPlayed);
     },
     shuffleActions(state) {
       state.actions.reset();
@@ -53,8 +63,28 @@ const Game = new Vuex.Store({
         player.addToHand(copyObj(state.actions.draw()));
       });
     },
+    replaceGameState(state, payload) {
+      const propsToReassign = [
+        'actions',
+        'players',
+        'todo',
+        'doing',
+        'done',
+        'currentWeek',
+        'weeks',
+        'days',
+        'currentDay',
+      ];
+      propsToReassign.forEach((prop) => {
+        if (payload[prop]) state[prop] = payload[prop];
+      });
+    },
     addCard(state, card) {
       state.todo.push(card);
+    },
+    setProductColumn(state, payload) {
+      console.log(`Move to ${payload.column}`, payload);
+      state[payload.column] = payload.cards;
     },
     setWeek(state, week) {
       const weekNo = parseInt(week, 0);
@@ -69,6 +99,7 @@ const Game = new Vuex.Store({
       state.currentDay = dayNo;
     },
   },
+  plugins: [GameStateBroadcaster],
 });
 
 /* TODO: Initialization logic should be separated into a
@@ -77,5 +108,75 @@ const Game = new Vuex.Store({
 Game.commit('setWeek', 1);
 Game.commit('setDay', 1);
 Game.commit('shuffleActions');
+
+/* Hydrate store with network data on load */
+const netState = store.state.userInfo;
+const users = netState.allUsers;
+users.forEach((user) => {
+  Game.commit('addPlayer', user);
+});
+
+/* Loosely coupled network subscription */
+store.subscribe((mutation, state) => {
+  // Initalization logic goes in the top section here
+  const mutationType = mutation.type;
+
+  if (mutationType === mutations.ADD_USER) {
+    const username = mutation.payload.user;
+    Game.commit('addPlayer', username);
+    return;
+  }
+
+  // From here on, exit if mutation did not come over the wire
+  if (mutation.payload.fromNetwork !== true) return;
+
+  if (mutationType === mutations.SET_GAME_STATE) {
+    // Main network handling container
+    const gameState = JSON.parse(mutation.payload.gameState);
+    console.log('Game state mutated over network!', gameState);
+
+    Game.commit('setDrafting', {
+      drafting: gameState.drafting,
+      localOnly: true,
+    });
+
+    // Re-create game classes with networked data
+    const actions = new ActionDeck(PLAYERS).reHydrate(gameState.actions);
+    delete gameState.actions;
+
+    const players = gameState.players.map((player) => {
+      const newPlayer = new Player(player.name);
+      newPlayer.reHydrate(player);
+      return newPlayer;
+    });
+    delete gameState.players;
+
+    const days = gameState.days.map((day) => {
+      const newDay = new Day(day.dayNum);
+      newDay.reHydrate(day);
+      return newDay;
+    });
+    delete gameState.days;
+
+    const weeks = gameState.weeks.map((week) => {
+      const newWeek = new Week(week.weekNum);
+      newWeek.reHydrate(week);
+      return newWeek;
+    });
+    delete gameState.weeks;
+
+    Game.commit('replaceGameState', {
+      players,
+      actions,
+      days,
+      weeks,
+      ...gameState,
+      localOnly: true,
+    });
+    return;
+  }
+
+  console.log(state);
+});
 
 export default Game;
