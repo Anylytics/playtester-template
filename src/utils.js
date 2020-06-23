@@ -78,7 +78,7 @@ export async function getPeer() {
         );
         // Fallback to cloud server
         const cloudpeerjs = new Peer({})
-          .on('open', (id) => resolve({ cloudpeerjs, id }))
+          .on('open', (id) => resolve({ peerjs: cloudpeerjs, id }))
           .on('error', (err) => {
             console.error(err);
             networkConsole.warn(
