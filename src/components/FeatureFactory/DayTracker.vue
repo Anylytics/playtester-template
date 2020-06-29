@@ -1,13 +1,12 @@
 <template>
   <div>
-    <h3>Day</h3>
+    <h3>DAY</h3>
     <b-button
       v-for="day in days"
       v-bind:key="day.dayNum"
       v-on:click="setDay(day)"
       v-bind:type="{ 'is-primary': day.isCurrent }"
-      >{{ day.dayNum }}</b-button
-    >
+    >{{ day.dayNum }}</b-button>
   </div>
 </template>
 <script>

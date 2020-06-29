@@ -2,11 +2,10 @@
   <div>
     <div class="columns">
       <div class="column">
-        <PlayerTracker class="card" />
+        <GameController />
       </div>
       <div class="column">
-        <WeekTracker />
-        <DayTracker />
+        <PlayerTracker class="card" />
       </div>
     </div>
     <div class="stretch-right">
@@ -90,9 +89,8 @@ import BankVault from './BankVault.vue';
 import EventDeck from './EventCardDeck.vue';
 import ProductDeck from './ProductDeck.vue';
 import GameStore from './gameStore';
-import WeekTracker from './WeekTracker.vue';
-import DayTracker from './DayTracker.vue';
 import PlayerTracker from './PlayerTracker.vue';
+import GameController from './GameController.vue';
 
 export default {
   name: 'GameBoard',
@@ -103,9 +101,8 @@ export default {
     draggable,
     EventDeck,
     ProductDeck,
-    WeekTracker,
-    DayTracker,
     PlayerTracker,
+    GameController,
   },
   computed: {
     todo: {
@@ -121,7 +118,6 @@ export default {
     },
     doing: {
       get() {
-        console.info('Get doing', GameStore.state.doing);
         return GameStore.state.doing;
       },
       set(cards) {

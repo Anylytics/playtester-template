@@ -21,6 +21,10 @@ export default class Player {
     return drawn;
   }
 
+  playFromReserve(idx) {
+    return this.reserve.splice(idx, 1)[0];
+  }
+
   reserveToHand(card) {
     this.reserve.push(card);
   }
