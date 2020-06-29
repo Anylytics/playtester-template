@@ -75,7 +75,6 @@ const Game = new Vuex.Store({
       const player = state.players[data.playerIdx];
       const cardPlayed = player.playFromHand(data.cardIdx);
       if (state.drafting === true) player.reserveToHand(cardPlayed);
-
     },
     playCard(state, data) {
       const player = state.players[data.playerIdx];
