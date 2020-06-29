@@ -3,12 +3,27 @@ export default class Player {
     this.name = name;
     this.hand = [];
     this.reserve = [];
+    this.playerplan = Math.floor(Math.random() * 6);
+
+    const seats = [...'abcdefghijklmnop'];
+
+    this.officeplan = seats.reduce((output, idx) => {
+      /* eslint-disable-next-line */
+      output[idx] = null;
+      return output;
+    }, {});
   }
 
   reHydrate(data) {
     this.name = data.name;
     this.hand = data.hand;
     this.reserve = data.reserve;
+    this.officeplan = data.officeplan;
+    this.playerplan = data.playerplan;
+  }
+
+  setPlan(idx, color) {
+    this.officeplan[idx] = color;
   }
 
   addToHand(card) {

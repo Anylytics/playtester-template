@@ -43,6 +43,12 @@
                   >
                 </div>
               </div>
+              <OfficePlan
+                :identifier="`${officePlanId}_${i}`"
+                :plandata="players[i].officeplan"
+                :onChange="setPlan.bind(null, i)"
+                :planidx="players[i].playerplan"
+              />
             </b-tab-item>
           </template>
         </b-tabs>
@@ -51,16 +57,26 @@
   </div>
 </template>
 <script>
+import getRandId from '@/utils/randId';
 import { mapState } from 'vuex';
+import OfficePlan from './OfficePlan.vue';
 import GameStore from './gameStore';
 
 export default {
   name: 'UserPanel',
+  components: { OfficePlan },
   methods: {
     keepCard(playerIdx, cardIdx) {
       GameStore.commit('drawCardFromPlayer', {
         playerIdx,
         cardIdx,
+      });
+    },
+    setPlan(playerIdx, seat, color) {
+      GameStore.commit('setPlayerPlan', {
+        playerIdx,
+        seat,
+        color,
       });
     },
     playCard(card, playerIdx, cardIdx) {
@@ -87,6 +103,7 @@ export default {
   data() {
     return {
       activePlayer: 0,
+      officePlanId: getRandId(),
     };
   },
   computed: {

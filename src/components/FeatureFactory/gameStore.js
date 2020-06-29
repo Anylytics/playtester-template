@@ -83,7 +83,12 @@ const Game = new Vuex.Store({
         msg: `${data.user} played ${data.cardName}`,
         week: state.currentWeek,
         day: state.currentDay,
+        ts: new Date().toTimeString().split(' ')[0],
       });
+    },
+    setPlayerPlan(state, data) {
+      const player = state.players[data.playerIdx];
+      player.setPlan(data.seat, data.color);
     },
     shuffleActions(state) {
       state.actions.reset();
