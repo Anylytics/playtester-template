@@ -10,6 +10,12 @@ import GameStateBroadcaster from './GameClasses/GameStateBroadcaster';
 
 Vue.use(Vuex);
 
+function getNext(currentIndex, arr) {
+  const len = arr.length;
+  if (currentIndex + 1 === len) return arr[0];
+  return arr[currentIndex + 1];
+}
+
 function copyObj(o) {
   return JSON.parse(JSON.stringify(o));
 }
@@ -32,15 +38,35 @@ const Game = new Vuex.Store({
       .fill()
       .map((item, index) => new Week(1 + index)),
     currentDay: null,
+    gameJournal: [],
     days: new Array(DAYSINWEEK).fill().map((item, index) => new Day(1 + index)),
   },
   mutations: {
+    writeToJournal(state, msg) {
+      state.gameJournal.push({
+        msg,
+        week: state.currentWeek,
+        day: state.currentDay,
+      });
+    },
     addPlayer(state, name) {
       const newPlayer = new Player(name);
       state.players.push(newPlayer);
     },
     toggleDrafting(state) {
       state.drafting = !state.drafting;
+    },
+    passHands(state) {
+      state.players.forEach((player, idx, players) => {
+        const nextPlayer = getNext(idx, players);
+        nextPlayer.tempHand = player.hand;
+      });
+      state.players = state.players.map((player) => {
+        const newPlayer = player;
+        newPlayer.hand = newPlayer.tempHand;
+        delete newPlayer.tempHand;
+        return newPlayer;
+      });
     },
     setDrafting(state, payload) {
       state.drafting = payload.drafting;
@@ -49,6 +75,16 @@ const Game = new Vuex.Store({
       const player = state.players[data.playerIdx];
       const cardPlayed = player.playFromHand(data.cardIdx);
       if (state.drafting === true) player.reserveToHand(cardPlayed);
+
+    },
+    playCard(state, data) {
+      const player = state.players[data.playerIdx];
+      player.playFromReserve(data.cardIdx);
+      state.gameJournal.push({
+        msg: `${data.user} played ${data.cardName}`,
+        week: state.currentWeek,
+        day: state.currentDay,
+      });
     },
     shuffleActions(state) {
       state.actions.reset();
@@ -72,6 +108,7 @@ const Game = new Vuex.Store({
         'done',
         'currentWeek',
         'weeks',
+        'gameJournal',
         'days',
         'currentDay',
       ];
@@ -164,15 +201,16 @@ store.subscribe((mutation, state) => {
       return newWeek;
     });
     delete gameState.weeks;
-
-    Game.commit('replaceGameState', {
+    const replacedGameState = {
       players,
       actions,
       days,
       weeks,
       ...gameState,
       localOnly: true,
-    });
+    };
+    console.info('replaced game state', replacedGameState);
+    Game.commit('replaceGameState', replacedGameState);
     return;
   }
 

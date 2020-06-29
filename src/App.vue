@@ -33,6 +33,7 @@ export default {
 <style>
 @import 'https://cdn.materialdesignicons.com/2.5.94/css/materialdesignicons.min.css';
 @import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css');
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -40,6 +41,10 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+@font-face {
+  font-family: 'Routed Gothic Wide';
+  src: url('~@/assets/routed-gothic-wide.ttf');
 }
 .is-full-height {
   height: 100%;
