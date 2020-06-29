@@ -97,7 +97,7 @@ export default new Vuex.Store({
       } catch (err) {
         // Neither server available
         console.error('No peerjs servers available', err);
-        state.system.initialized = false;
+        state.system.initialized = true;
         state.system.error = true;
       }
     },

@@ -2,7 +2,7 @@
   <div>
     <div>
       <b-button v-on:click="shuffle()">DEAL</b-button>
-      <b-button v-on:click="setDrafting()">{{draftBtnTxt}}</b-button>
+      <b-button v-on:click="setDrafting()">{{ draftBtnTxt }}</b-button>
       <b-button v-on:click="addPlayer()">ADD PLAYER</b-button>
       <hr />
       <div class="columns">
@@ -10,7 +10,9 @@
           <b-tag>Actions: {{ actionDeck.deck.length }}</b-tag>
           <b-tag>Drawn: {{ actionDeck.drawn.length }}</b-tag>
           <b-tag type="is-primary" v-if="drafting">Drafting</b-tag>
-          <b-button v-on:click="passHands()" v-if="drafting" size="is-small">PASS HANDS</b-button>
+          <b-button v-on:click="passHands()" v-if="drafting" size="is-small"
+            >PASS HANDS</b-button
+          >
           <hr />
 
           <WeekTracker />
@@ -69,6 +71,12 @@ export default {
           field: 'msg',
           label: 'Activity',
           width: '40',
+          numeric: false,
+        },
+        {
+          field: 'ts',
+          label: 'Timestamp',
+          width: 10,
           numeric: false,
         },
       ],
