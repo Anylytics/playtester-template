@@ -14,6 +14,7 @@
           <template v-for="(player, i) in players">
             <b-tab-item :label="getPlayerLabel(player)" :key="i">
               <div v-if="userName === player.name">
+
                 <h4 v-if="player.hand.length>0">Hand</h4>
                 <div class="columns">
                   <div class="column" v-for="(card, c) in player.hand" :key="c">
@@ -69,6 +70,16 @@ export default {
       const user = this.userName;
       if (player.name === user) {
         return `👉    ${player.name}    👈`;
+      }
+      return player.name;
+    },
+    setDrafting() {
+      GameStore.commit('toggleDrafting');
+    },
+    getPlayerLabel(player) {
+      const user = this.userName;
+      if (player.name === user) {
+        return `😎    ${player.name}    😎`;
       }
       return player.name;
     },
