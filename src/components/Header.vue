@@ -7,7 +7,7 @@
     </template>
     <template slot="start">
       <b-navbar-item tag="router-link" to="/home">
-        <b>Feature Factory</b>
+        <b>Feature Factory - BETA</b>
       </b-navbar-item>
       <b-navbar-item>{{ currentRouteName }}</b-navbar-item>
     </template>
