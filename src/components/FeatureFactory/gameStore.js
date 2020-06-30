@@ -26,7 +26,6 @@ const PLAYERS = 6;
 
 const Game = new Vuex.Store({
   state: {
-    currentPlayer: new Player('HOST'),
     players: [],
     drafting: false,
     actions: new ActionDeck(PLAYERS),
@@ -74,13 +73,22 @@ const Game = new Vuex.Store({
     drawCardFromPlayer(state, data) {
       const player = state.players[data.playerIdx];
       const cardPlayed = player.playFromHand(data.cardIdx);
-      if (state.drafting === true) player.reserveToHand(cardPlayed);
+      if (state.drafting === true) {
+        player.reserveToHand(cardPlayed);
+        return;
+      }
+      state.gameJournal.push({
+        msg: `${store.state.userInfo.userName} discarded ${cardPlayed.name}`,
+        week: state.currentWeek,
+        day: state.currentDay,
+        ts: new Date().toTimeString().split(' ')[0],
+      });
     },
     playCard(state, data) {
       const player = state.players[data.playerIdx];
-      player.playFromReserve(data.cardIdx);
+      const cardPlayed = player.playFromReserve(data.cardIdx);
       state.gameJournal.push({
-        msg: `${data.user} played ${data.cardName}`,
+        msg: `${store.state.userInfo.userName} played ${cardPlayed.name}`,
         week: state.currentWeek,
         day: state.currentDay,
         ts: new Date().toTimeString().split(' ')[0],
@@ -151,22 +159,22 @@ Game.commit('setDay', 1);
 Game.commit('shuffleActions');
 
 /* Hydrate store with network data on load */
-const netState = store.state.userInfo;
-const users = netState.allUsers;
-users.forEach((user) => {
-  Game.commit('addPlayer', user);
-});
+// const netState = store.state.userInfo;
+// const users = netState.allUsers;
+// users.forEach((user) => {
+//   Game.commit('addPlayer', user);
+// });
 
 /* Loosely coupled network subscription */
 store.subscribe((mutation, state) => {
   // Initalization logic goes in the top section here
   const mutationType = mutation.type;
 
-  if (mutationType === mutations.ADD_USER) {
-    const username = mutation.payload.user;
-    Game.commit('addPlayer', username);
-    return;
-  }
+  // if (mutationType === mutations.ADD_USER) {
+  //   const username = mutation.payload.user;
+  //   Game.commit('addPlayer', username);
+  //   return;
+  // }
 
   // From here on, exit if mutation did not come over the wire
   if (mutation.payload.fromNetwork !== true) return;

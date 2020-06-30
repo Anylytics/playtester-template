@@ -59,6 +59,13 @@ export class Logger {
       'padding: 2px; color: #2c3e50; background: #f39c12; border-top-right-radius: 4px; border-bottom-right-radius:4px',
     );
   }
+
+  error(msg) {
+    this.print(
+      msg,
+      'padding: 2px; color: #2c3e50; background: #e74c3c; border-top-right-radius: 4px; border-bottom-right-radius:4px',
+    );
+  }
 }
 
 export async function getPeer() {

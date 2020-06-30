@@ -9,7 +9,9 @@
       <b-navbar-item tag="router-link" to="/home">
         <b>Feature Factory - BETA</b>
       </b-navbar-item>
-      <b-navbar-item>{{ currentRouteName }}</b-navbar-item>
+      <b-navbar-item
+        >{{ currentRouteName }} {{ `(${gameTitle}) ` }}</b-navbar-item
+      >
     </template>
     <template slot="end">
       <b-navbar-item v-on:click="createModal()">New</b-navbar-item>
@@ -32,10 +34,20 @@ export default {
   },
   computed: {
     ...mapState({
+      gameName: (s) => s.userInfo.gameName,
       gameId: (s) => s.userInfo.gameId,
     }),
     currentRouteName() {
       return this.$route.name;
+    },
+    gameTitle() {
+      if (this.gameId === null && this.gameName === null) {
+        return 'Lobby';
+      }
+      if (this.gameId !== null && this.gameName === null) {
+        return 'Error in connection';
+      }
+      return this.gameId && this.gameName;
     },
   },
   methods: {
@@ -54,18 +66,6 @@ export default {
         hasModalCard: true,
         trapFocus: true,
       });
-      // this.$buefy.dialog.prompt({
-      //   message: 'Please enter the game ID',
-      //   inputAttrs: {
-      //     placeholder: 'e.g. q6h1ftzqldf00000',
-      //     maxlength: 16,
-      //   },
-      //   trapFocus: true,
-      //   onConfirm: (gameId) => {
-      //     this.$store.dispatch('joinSession', { gameId, userName: 'Gokul' });
-      //     this.$router.push({ path: 'game', query: { gameId } });
-      //   },
-      // });
     },
   },
 };
