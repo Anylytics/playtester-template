@@ -32,7 +32,7 @@
   </div>
 </template>
 <script>
-import { genRandomUserName } from '@/utils';
+// import { genRandomUserName } from '@/utils';
 import WeekTracker from './WeekTracker.vue';
 import DayTracker from './DayTracker.vue';
 import GameStore from './gameStore';
@@ -84,7 +84,9 @@ export default {
   },
   methods: {
     addPlayer() {
-      GameStore.commit('addPlayer', genRandomUserName());
+      /* eslint-disable-next-line */
+      const name = prompt('Name');
+      GameStore.commit('addPlayer', name);
     },
     shuffle() {
       GameStore.commit('shuffleActions');
