@@ -35,7 +35,7 @@ function reMount(seatplan) {
   const card = this.card;
   /* eslint-disable-next-line */
   const planidx = this.planidx;
-  card.node().children[0].remove();
+  if (card.node().children[0]) card.node().children[0].remove();
 
   d3.xml(plans[planidx]).then((data) => {
     /* eslint-disable-next-line */
