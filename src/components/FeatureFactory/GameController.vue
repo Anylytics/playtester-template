@@ -10,9 +10,7 @@
           <b-tag>Actions: {{ actionDeck.deck.length }}</b-tag>
           <b-tag>Drawn: {{ actionDeck.drawn.length }}</b-tag>
           <b-tag type="is-primary" v-if="drafting">Drafting</b-tag>
-          <b-button v-on:click="passHands()" v-if="drafting" size="is-small"
-            >PASS HANDS</b-button
-          >
+          <b-button v-on:click="passHands()" v-if="drafting" size="is-small">PASS HANDS</b-button>
           <hr />
 
           <WeekTracker />
@@ -32,7 +30,7 @@
   </div>
 </template>
 <script>
-import { genRandomUserName } from '@/utils';
+// import { genRandomUserName } from '@/utils';
 import WeekTracker from './WeekTracker.vue';
 import DayTracker from './DayTracker.vue';
 import GameStore from './gameStore';
@@ -84,7 +82,9 @@ export default {
   },
   methods: {
     addPlayer() {
-      GameStore.commit('addPlayer', genRandomUserName());
+      /* eslint-disable-next-line */
+      const name = prompt('Name');
+      GameStore.commit('addPlayer', name);
     },
     shuffle() {
       GameStore.commit('shuffleActions');
