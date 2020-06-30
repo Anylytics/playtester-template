@@ -38,7 +38,8 @@ function reMount(seatplan) {
   card.node().children[0].remove();
 
   d3.xml(plans[planidx]).then((data) => {
-    console.log(card, data);
+    /* eslint-disable-next-line */
+    const onChange = this.onChange;
     card.node().append(data.documentElement);
     Object.keys(seatplan).forEach((seat) => {
       const slot = card.select(`#${seat}`);
@@ -47,6 +48,14 @@ function reMount(seatplan) {
         slot.style('fill', seatplan[seat]);
         slot.attr('fill', seatplan[seat]);
       }
+      slot.on('click', () => {
+        const currentColor = slot.attr('fill');
+        const newColor = rotateColor(currentColor) || colorTools.flatWhite;
+        slot.style('fill-opacity', 1);
+        slot.style('fill', newColor);
+        slot.attr('fill', newColor);
+        onChange(seat, newColor);
+      });
     });
   });
 }

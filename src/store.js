@@ -124,21 +124,28 @@ export default new Vuex.Store({
     },
     async joinSession({ state, dispatch, commit }, { gameId, userName }) {
       networkConsole.log(`joining ${gameId}`, state.userInfo.peerjs);
-      const connection = state.userInfo.peerjs.connect(gameId);
-      await connection.on('open', async () => {
-        networkConsole.log(`Connected to ${gameId}`);
-        // At this point, we should be connected to the host
-        // state.userInfo.peerjs = peerjs;
-        state.userInfo.userName = userName;
-        state.userInfo.gameId = gameId;
-        commit(mutations.ADD_USER, { user: userName });
-        await dispatch('setupConnection', connection);
-        relayOverNetwork(
-          state,
-          { user: userName, connection },
-          mutations.ADD_USER,
-        );
-      });
+      const connection = state.userInfo.peerjs
+        .connect(gameId)
+        .on('open', async () => {
+          networkConsole.log(`Connected to ${gameId}`);
+          // At this point, we should be connected to the host
+          // state.userInfo.peerjs = peerjs;
+          state.userInfo.userName = userName;
+          state.userInfo.gameId = gameId;
+          commit(mutations.ADD_USER, { user: userName });
+          await dispatch('setupConnection', connection);
+          relayOverNetwork(
+            state,
+            { user: userName, connection },
+            mutations.ADD_USER,
+          );
+        })
+        .on('error', (err) => {
+          networkConsole.error(
+            'WHOOPS: Pairing did not work, try again maybe?',
+          );
+          console.error(err);
+        });
     },
     setupConnection({ state, commit }, connection) {
       commit('addConnection', connection);

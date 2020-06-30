@@ -3,7 +3,7 @@
     <div>
       <b-button v-on:click="shuffle()">DEAL</b-button>
       <b-button v-on:click="setDrafting()">{{ draftBtnTxt }}</b-button>
-      <b-button v-on:click="addPlayer()">ADD PLAYER</b-button>
+      <!-- <b-button v-on:click="addPlayer()">ADD PLAYER</b-button> -->
       <hr />
       <div class="columns">
         <div class="column">
@@ -19,6 +19,16 @@
           <DayTracker />
         </div>
         <div class="column">
+          <h3>Waiting in Lobby</h3>
+          <b-button
+            v-for="(player, l) in lobbyPlayers"
+            v-bind:key="l"
+            :icon-left="lobbyInGameIcons[player].icon"
+            :type="lobbyInGameIcons[player].type"
+            v-on:click="addPlayer(player)"
+            >{{ player }}</b-button
+          >
+
           <b-table
             :data="journal"
             :columns="journalColumns"
@@ -33,6 +43,7 @@
 </template>
 <script>
 // import { genRandomUserName } from '@/utils';
+import { mapState } from 'vuex';
 import WeekTracker from './WeekTracker.vue';
 import DayTracker from './DayTracker.vue';
 import GameStore from './gameStore';
@@ -47,9 +58,26 @@ export default {
     drafting: () => GameStore.state.drafting,
     actionDeck: () => GameStore.state.actions,
     journal: () => GameStore.state.gameJournal,
+    gamePlayers: () => GameStore.state.players.map((player) => player.name),
     draftBtnTxt: () => {
       if (GameStore.state.drafting === true) return 'STOP DRAFTING';
       return 'START DRAFTING';
+    },
+    ...mapState({
+      lobbyPlayers: (s) => s.userInfo.allUsers,
+    }),
+    lobbyInGameIcons: function lobbyInGameIcons() {
+      const joinedIcon = 'account-check';
+      const userIcon = 'account';
+      return this.lobbyPlayers.reduce((output, player) => {
+        const joined = this.gamePlayers.indexOf(player) > -1;
+        /* eslint-disable-next-line */
+        output[player] = {
+          icon: joined ? joinedIcon : userIcon,
+          type: joined ? 'is-success' : 'is-light',
+        };
+        return output;
+      }, {});
     },
   },
   data() {
@@ -83,9 +111,15 @@ export default {
     };
   },
   methods: {
-    addPlayer() {
-      /* eslint-disable-next-line */
-      const name = prompt('Name');
+    addPlayer(name) {
+      if (this.gamePlayers.indexOf(name) > -1) {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: `${name} is already in the game!`,
+          type: 'is-warning',
+        });
+        return;
+      }
       GameStore.commit('addPlayer', name);
     },
     shuffle() {
