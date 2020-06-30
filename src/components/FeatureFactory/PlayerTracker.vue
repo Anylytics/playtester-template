@@ -5,9 +5,7 @@
         <span>Players</span>
       </div>
       <div class="column" v-if="drafting">
-        <b-tag class="column animated fadeIn infinite" type="is-danger"
-          >Drafting!</b-tag
-        >
+        <b-tag class="column animated fadeIn infinite" type="is-danger">Drafting!</b-tag>
       </div>
     </div>
     <div class="resource-container">
@@ -16,31 +14,29 @@
           <template v-for="(player, i) in players">
             <b-tab-item :label="getPlayerLabel(player)" :key="i">
               <div v-if="userName === player.name">
-                <h4 v-if="player.hand.length > 0">Hand</h4>
+                <h4 class="is-size-4" v-if="player.hand.length > 0">Hand</h4>
                 <div class="columns">
                   <div class="column" v-for="(card, c) in player.hand" :key="c">
                     <b-button
                       class="card action-card"
                       :style="{ background: `${card.background}` }"
                       v-on:click="keepCard(i, c)"
-                      >{{ card.name }}</b-button
-                    >
+                    >{{ card.name }}</b-button>
                   </div>
                 </div>
-              </div>
-              <h4 v-if="player.reserve.length > 0">Drawn</h4>
-              <div class="columns">
-                <div
-                  v-for="(card, k) in player.reserve"
-                  :key="`${card.name}_${k}`"
-                  class="column"
-                >
-                  <b-button
-                    class="card action-card"
-                    :style="{ background: `${card.background}` }"
-                    v-on:click="playCard(card, i, k)"
-                    >{{ card.name }}</b-button
+                <h4 class="is-size-4" v-if="player.reserve.length > 0">Drawn</h4>
+                <div class="columns">
+                  <div
+                    v-for="(card, k) in player.reserve"
+                    :key="`${card.name}_${k}`"
+                    class="column"
                   >
+                    <b-button
+                      class="card action-card"
+                      :style="{ background: `${card.background}` }"
+                      v-on:click="playCard(card, i, k)"
+                    >{{ card.name }}</b-button>
+                  </div>
                 </div>
               </div>
               <div
@@ -50,6 +46,7 @@
                     : { pointerEvents: 'none', cursor: 'not-allowed' }
                 "
               >
+                <h2 class="is-size-4">The Office</h2>
                 <OfficePlan
                   :identifier="`${officePlanId}_${i}`"
                   :plandata="players[i].officeplan"
