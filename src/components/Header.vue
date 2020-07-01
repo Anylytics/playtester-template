@@ -7,7 +7,7 @@
     </template>
     <template slot="start">
       <b-navbar-item tag="router-link" to="/home">
-        <b>Feature Factory - BETA</b>
+        <b>Feature Factory - BETA (Last Published: {{ published }})</b>
       </b-navbar-item>
       <b-navbar-item
         >{{ currentRouteName }} {{ `(${gameTitle}) ` }}</b-navbar-item
@@ -30,6 +30,7 @@ export default {
   data() {
     return {
       isComponentModalActive: false,
+      published: process.env.VUE_APP_PUBLISH_DATE,
     };
   },
   computed: {
