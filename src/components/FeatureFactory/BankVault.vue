@@ -3,15 +3,15 @@
     <span>BANK</span>
     <div class="resource-container">
       <div>
-        <b-button
-          type="is-light"
-          expanded
-          icon-right="plus"
-          v-on:click="addCurrency"
-        />
+        <b-button type="is-light" icon-left="plus" v-on:click="addCurrency"
+          >$</b-button
+        >
+        <b-button type="is-light" icon-left="plus" v-on:click="addCurrency(3)"
+          >$$$
+        </b-button>
       </div>
       <div
-        v-for="(currencyToken, idx) in staff"
+        v-for="(currencyToken, idx) in vault"
         :key="idx"
         class="token currency"
         v-on:click="removeCurrency"
@@ -26,18 +26,20 @@
 export default {
   name: 'BankVault',
   methods: {
-    addCurrency() {
-      this.staff.push({
-        background: '#f1c40f',
+    addCurrency(amt = 1) {
+      new Array(amt).fill('').forEach(() => {
+        this.vault.push({
+          background: '#f1c40f',
+        });
       });
     },
     removeCurrency() {
-      this.staff.splice(0, 1);
+      this.vault.splice(0, 1);
     },
   },
   data() {
     return {
-      staff: [],
+      vault: [],
     };
   },
 };

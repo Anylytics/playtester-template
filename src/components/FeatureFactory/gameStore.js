@@ -16,6 +16,11 @@ function getNext(currentIndex, arr) {
   return arr[currentIndex + 1];
 }
 
+function getPrev(currentIndex, arr) {
+  if (currentIndex - 1 < 0) return arr[arr.length - 1];
+  return arr[currentIndex - 1];
+}
+
 function copyObj(o) {
   return JSON.parse(JSON.stringify(o));
 }
@@ -56,8 +61,11 @@ const Game = new Vuex.Store({
       state.drafting = !state.drafting;
     },
     passHands(state) {
+      const thisWeek = state.currentWeek;
       state.players.forEach((player, idx, players) => {
-        const nextPlayer = getNext(idx, players);
+        console.log('thisweek', thisWeek);
+        const passFn = thisWeek % 2 === 1 ? getNext : getPrev;
+        const nextPlayer = passFn(idx, players);
         nextPlayer.tempHand = player.hand;
       });
       state.players = state.players.map((player) => {
@@ -87,6 +95,10 @@ const Game = new Vuex.Store({
     playCard(state, data) {
       const player = state.players[data.playerIdx];
       const cardPlayed = player.playFromReserve(data.cardIdx);
+      if (state.drafting === true) {
+        player.addToHand(cardPlayed);
+        return;
+      }
       state.gameJournal.push({
         msg: `${store.state.userInfo.userName} played ${cardPlayed.name}`,
         week: state.currentWeek,

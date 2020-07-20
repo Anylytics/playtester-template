@@ -39,13 +39,14 @@
                   </div>
                 </div>
               </div>
-              <div
+              <!-- <div
                 :style="
                   userName === player.name
                     ? {}
                     : { pointerEvents: 'none', cursor: 'not-allowed' }
                 "
-              >
+              >-->
+              <div>
                 <h2 class="is-size-4">The Office</h2>
                 <OfficePlan
                   :identifier="`${officePlanId}_${i}`"
@@ -96,10 +97,17 @@ export default {
     },
     getPlayerLabel(player) {
       const user = this.userName;
-      if (player.name === user) {
-        return `👉    ${player.name}    👈`;
+      console.log(player);
+      let hand = '';
+      if (this.drafting) {
+        const toDraft = player.hand ? player.hand.length : '?';
+        const drafted = player.reserve ? player.reserve.length : '?';
+        hand = `(${toDraft} / ${drafted})`;
       }
-      return player.name;
+      if (player.name === user) {
+        return `👉    ${player.name} ${hand}   👈`;
+      }
+      return `${player.name} ${hand}`;
     },
     setDrafting() {
       GameStore.commit('toggleDrafting');
