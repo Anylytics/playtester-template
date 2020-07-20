@@ -1,6 +1,10 @@
 <template>
-  <div>
+  <div :style="getIndustryStyle(cardmodel.industryColor)">
+    <h4>
+      <b>{{cardmodel.product}}</b>
+    </h4>
     <svg v-bind:id="identifier" width="81.634796mm" height="53.412571mm" />
+    <h4>{{cardmodel.industryName}}</h4>
   </div>
 </template>
 
@@ -32,10 +36,6 @@ function fillSchematic(card, model) {
     if (!continueToBindClick) return;
 
     slot.on('click', () => {
-      // const opacity = slot.attr('selected') === '0' ? 1 : 0.25;
-      // const selected = slot.attr('selected') === '0' ? '1' : '0';
-      // slot.style('fill-opacity', opacity);
-      // slot.attr('selected', selected);
       const currentColor = slot.attr('fill');
       const newColor = rotateColor(currentColor) || colorTools.flatWhite;
       slot.style('fill-opacity', 1);
@@ -44,6 +44,10 @@ function fillSchematic(card, model) {
     });
     slot.on('contextmenu', () => false);
   });
+}
+
+function isBlank(str) {
+  return !/\S/.test(str);
 }
 
 function onMount() {
@@ -56,14 +60,26 @@ function onMount() {
     this.card.node().append(data.documentElement);
     console.log('fetched svg', this.card, data.documentElement);
     const cardTitle = this.card.select('#featureLabel').select('textPath');
-    const cardValue = this.card.select('#val').select('tspan');
-    const cardFuture = this.card.select('#future').select('tspan');
-    const cardFuture2 = this.card.select('#future2').select('tspan');
-
     cardTitle.text(cardmodel.product);
+
+    const cardValue = this.card.select('#val').select('tspan');
     cardValue.text(cardmodel.value);
+
+    const cardFuture = this.card.select('#future').select('tspan');
     cardFuture.text(cardmodel.futures[0] || '');
+
+    const cardFuture2 = this.card.select('#future2').select('tspan');
     cardFuture2.text(cardmodel.futures[1] || '');
+
+    const cardIndustryColorBanner = this.card.select('#industryBanner');
+    cardIndustryColorBanner.style('fill', cardmodel.industryColor);
+
+    const cardIndustryColorFutures = this.card.select('#industryFuture');
+    cardIndustryColorFutures.style('fill', cardmodel.industryColor);
+
+    if (isBlank(cardmodel.futures[0]) && isBlank(cardmodel.futures[1])) {
+      cardIndustryColorFutures.style('opacity', 0);
+    }
 
     fillSchematic(this.card, cardmodel);
   });
@@ -73,6 +89,15 @@ export default {
   name: 'Industries',
   props: ['identifier', 'cardmodel'],
   mounted: onMount,
+  methods: {
+    getIndustryStyle(backgroundColor) {
+      return {
+        backgroundColor,
+        color: 'white',
+        fontWeight: 800,
+      };
+    },
+  },
 };
 </script>
 
@@ -87,5 +112,9 @@ svg * {
 }
 svg {
   margin: 10px;
+}
+.industryLabel {
+  transform: rotate(90deg);
+  display: inline-block;
 }
 </style>

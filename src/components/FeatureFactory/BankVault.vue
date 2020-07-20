@@ -1,14 +1,10 @@
 <template>
   <div>
-    <span>BANK</span>
+    <span>BANK: {{vault.length}}</span>
     <div class="resource-container">
       <div>
-        <b-button type="is-light" icon-left="plus" v-on:click="addCurrency"
-          >$</b-button
-        >
-        <b-button type="is-light" icon-left="plus" v-on:click="addCurrency(3)"
-          >$$$
-        </b-button>
+<b-button type="is-light" icon-left="plus" v-on:click="addCurrency">$</b-button>
+        <b-button type="is-light" icon-left="plus" v-on:click="addCurrency(3)">$$$</b-button>
       </div>
       <div
         v-for="(currencyToken, idx) in vault"
@@ -17,7 +13,7 @@
         v-on:click="removeCurrency"
         :style="currencyToken"
       >
-        <b-icon icon="currency-usd" size="is-small"> </b-icon>
+        <b-icon icon="currency-usd" size="is-small"></b-icon>
       </div>
     </div>
   </div>
