@@ -3,7 +3,7 @@
     <span>BANK: {{vault.length}}</span>
     <div class="resource-container">
       <div>
-        <b-button type="is-light" icon-left="plus" v-on:click="addCurrency">$</b-button>
+<b-button type="is-light" icon-left="plus" v-on:click="addCurrency">$</b-button>
         <b-button type="is-light" icon-left="plus" v-on:click="addCurrency(3)">$$$</b-button>
       </div>
       <div

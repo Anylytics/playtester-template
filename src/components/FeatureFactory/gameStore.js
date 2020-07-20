@@ -27,7 +27,7 @@ function copyObj(o) {
 
 const WEEKSINGAME = 12;
 const DAYSINWEEK = 5;
-const PLAYERS = 6;
+const PLAYERS = 4;
 
 const Game = new Vuex.Store({
   state: {
