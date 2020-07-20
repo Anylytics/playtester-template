@@ -18,11 +18,26 @@ import GameState from './gameStore';
 
 const productDecks = {};
 
-function flattenData(industryProducts) {
+const industryColors = {
+  Defense: '#ff5252',
+  Transportation: '#aaa69d',
+  Agriculture: '#cd6133',
+  Energy: '#33d9b2',
+  Entertainment: '#ffda79',
+  Hospitality: '#2c2c54',
+  Healthcare: '#227093',
+};
+
+function flattenData(industryProducts, industryLookup) {
   const easyDeck = [];
   const hardDeck = [];
   Object.values(industryProducts).forEach((thisIndustry) => {
     Object.values(thisIndustry).forEach((thisProduct) => {
+      // eslint-disable-next-line no-param-reassign
+      thisProduct.industryName = industryLookup[thisProduct.industry];
+      // eslint-disable-next-line no-param-reassign
+      thisProduct.industryColor = industryColors[thisProduct.industryName];
+      console.log(thisProduct);
       if (thisProduct.value > 6) {
         hardDeck.push(thisProduct);
         return;
@@ -47,8 +62,17 @@ export default {
       this.loading = true;
       Storage.uploadWork().then((data) => {
         this.loading = false;
+        const industries = JSON.parse(data.INDUSTRIES);
+        const industryLookup = industries.reduce(
+          (industryMap, thisIndustry) => {
+            // eslint-disable-next-line no-param-reassign
+            industryMap[thisIndustry.id] = thisIndustry.name;
+            return industryMap;
+          },
+          {},
+        );
         const products = JSON.parse(data.PRODUCTS);
-        const { easyDeck, hardDeck } = flattenData(products);
+        const { easyDeck, hardDeck } = flattenData(products, industryLookup);
 
         productDecks.easy = new Deck(easyDeck);
         productDecks.hard = new Deck(hardDeck);

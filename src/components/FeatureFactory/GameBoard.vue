@@ -22,7 +22,7 @@
         </div>
       </div>
       <div class="game-panel panel-wide">
-        TODO
+        <div class="panel-title">TODO ({{todo.length}})</div>
         <draggable
           class="drag-container"
           ghost-class="ghost"
@@ -41,7 +41,7 @@
         </draggable>
       </div>
       <div class="game-panel panel-wide">
-        DOING
+        <div class="panel-title">DOING ({{doing.length}})</div>
         <draggable
           class="drag-container"
           ghost-class="ghost"
@@ -60,7 +60,7 @@
         </draggable>
       </div>
       <div class="game-panel panel-wide">
-        SHIPPED
+        <div class="panel-title">SHIPPED ({{done.length}})</div>
         <draggable
           class="drag-container"
           @start="drag = true"
@@ -148,7 +148,8 @@ export default {
   display: none;
 }
 .game-panel {
-  height: 640px;
+  height: 320px;
+  min-height: 640px;
   background: whitesmoke;
   border-radius: 5px;
   border: solid 1px whitesmoke;
@@ -188,5 +189,11 @@ export default {
 }
 .drag-container {
   min-height: 100%;
+}
+.panel-title {
+  font-weight: 800;
+  font-size: 24px;
+  background: #303952;
+  color: white;
 }
 </style>
