@@ -148,8 +148,7 @@ export default {
   display: none;
 }
 .game-panel {
-  height: 320px;
-  min-height: 640px;
+  height: 920px;
   background: whitesmoke;
   border-radius: 5px;
   border: solid 1px whitesmoke;

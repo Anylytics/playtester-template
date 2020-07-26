@@ -1,10 +1,21 @@
 <template>
-  <div :style="getIndustryStyle(cardmodel.industryColor)">
-    <h4>
-      <b>{{cardmodel.product}}</b>
-    </h4>
+  <div :style="getIndustryStyle(cardmodel.industryColor)" :class="shouldHide ? 'hidden' : null">
     <svg v-bind:id="identifier" width="81.634796mm" height="53.412571mm" />
-    <h4>{{cardmodel.industryName}}</h4>
+    <div class="product-meta">
+      <h4>
+        <b>{{cardmodel.product}}</b>
+        <b-button
+          class="small-btn"
+          size="is-small"
+          @click="hide()"
+          icon-left="close"
+          type="is-danger"
+        ></b-button>
+      </h4>
+      <h4>
+        <em>{{cardmodel.industryName}}</em>
+      </h4>
+    </div>
   </div>
 </template>
 
@@ -89,6 +100,11 @@ export default {
   name: 'Industries',
   props: ['identifier', 'cardmodel'],
   mounted: onMount,
+  data() {
+    return {
+      shouldHide: false,
+    };
+  },
   methods: {
     getIndustryStyle(backgroundColor) {
       return {
@@ -96,6 +112,15 @@ export default {
         color: 'white',
         fontWeight: 800,
       };
+    },
+    hide() {
+      this.$buefy.dialog.confirm({
+        message: 'Are you sure? 👀',
+        onConfirm: this.setHide,
+      });
+    },
+    setHide() {
+      this.shouldHide = true;
     },
   },
 };
@@ -116,5 +141,23 @@ svg {
 .industryLabel {
   transform: rotate(90deg);
   display: inline-block;
+}
+.product-meta {
+  padding-bottom: 8px;
+  display: block;
+  font-size: 18px;
+  text-shadow: 1px 1px #262d3e;
+}
+.title {
+  font-size: 20px;
+}
+.subtitle {
+  font-size: 12px;
+}
+.small-btn {
+  margin-left: 4px;
+}
+.hidden {
+  display: none;
 }
 </style>

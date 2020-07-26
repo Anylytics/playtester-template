@@ -71,16 +71,53 @@ export default {
           },
           {},
         );
-        const products = JSON.parse(data.PRODUCTS);
-        const { easyDeck, hardDeck } = flattenData(products, industryLookup);
-
-        productDecks.easy = new Deck(easyDeck);
-        productDecks.hard = new Deck(hardDeck);
-        productDecks.easy.shuffle();
-        productDecks.hard.shuffle();
-        this.easyProducts = productDecks.easy.deck;
-        this.hardProducts = productDecks.hard.deck;
+        const industryLookupReverse = industries.reduce(
+          (industryMap, thisIndustry) => {
+            // eslint-disable-next-line no-param-reassign
+            industryMap[thisIndustry.name] = thisIndustry.id;
+            return industryMap;
+          },
+          {},
+        );
+        const industryNames = industries.reduce(
+          (industryNamesArr, thisIndustry) => {
+            industryNamesArr.push(thisIndustry.name);
+            return industryNamesArr;
+          },
+          [],
+        );
+        this.$buefy.dialog.prompt({
+          title: 'Industry selection',
+          message: `${industryNames.join(', ')}`,
+          inputAttrs: {
+            placeholder: 'Healthcare,Defense',
+          },
+          trapFocus: true,
+          onConfirm: (value) => {
+            const selectedIds = value.split(',').map((thisIndustry) => {
+              const industryId = industryLookupReverse[thisIndustry];
+              return industryId;
+            });
+            this.setDeck(selectedIds, data, industryLookup);
+          },
+        });
       });
+    },
+    setDeck(selectedIndustries, data, industryLookup) {
+      const products = JSON.parse(data.PRODUCTS);
+      Object.keys(products).forEach((industry) => {
+        if (selectedIndustries.indexOf(industry) === -1) {
+          delete products[industry];
+        }
+      });
+      const { easyDeck, hardDeck } = flattenData(products, industryLookup);
+
+      productDecks.easy = new Deck(easyDeck);
+      productDecks.hard = new Deck(hardDeck);
+      productDecks.easy.shuffle();
+      productDecks.hard.shuffle();
+      this.easyProducts = productDecks.easy.deck;
+      this.hardProducts = productDecks.hard.deck;
     },
     drawEasy() {
       const card = productDecks.easy.draw();
